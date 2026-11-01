@@ -16,16 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.sudokusolver.sudoku.SudokuRecognizer
+import com.example.sudokusolver.sudoku.SudokuViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 import sudokusolver.shared.generated.resources.Res
 import sudokusolver.shared.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    sudokuViewModel: SudokuViewModel = koinViewModel()
+) {
     MaterialTheme {
-        var Recognizerishere by remember { mutableStateOf() }
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
@@ -35,9 +38,8 @@ fun App() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-           if(showSplash) {
+           if(sudokuViewModel.recState) {
                Text(
-                   modifier = Modifier.visible(recognizer != null),
                    text = "we can see sudoku c++ code",
                )
            }
