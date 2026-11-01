@@ -11,5 +11,4 @@ val androidModule = module {
         AndroidSudokuRecognizer(androidContext())
     }
 
-
 }
