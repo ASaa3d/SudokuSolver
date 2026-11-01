@@ -3,7 +3,6 @@ package com.example.sudokusolver
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,11 +11,11 @@ import androidx.compose.foundation.layout.visible
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.sudokusolver.sudoku.SudokuRecognizer
 import org.jetbrains.compose.resources.painterResource
 
 import sudokusolver.shared.generated.resources.Res
@@ -24,9 +23,9 @@ import sudokusolver.shared.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
-fun App(recognizer: SudokuRecognizer? = null) {
+fun App() {
     MaterialTheme {
-        var showSudoku by remember { mutableStateOf(recognizer!=null) }
+        var Recognizerishere by remember { mutableStateOf() }
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
@@ -36,7 +35,7 @@ fun App(recognizer: SudokuRecognizer? = null) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-           if(showSudoku) {
+           if(showSplash) {
                Text(
                    modifier = Modifier.visible(recognizer != null),
                    text = "we can see sudoku c++ code",

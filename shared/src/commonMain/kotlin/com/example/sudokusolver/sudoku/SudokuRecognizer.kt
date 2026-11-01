@@ -1,4 +1,4 @@
-package com.example.sudokusolver
+package com.example.sudokusolver.sudoku
 
 interface SudokuRecognizer : AutoCloseable {
 
@@ -12,5 +12,8 @@ interface SudokuRecognizer : AutoCloseable {
         height: Int,
         format: PixelFormat,
         rowStride: Int = 0,
+    ): Array<IntArray>?
+    fun processFile(
+        path: String
     ): Array<IntArray>?
 }

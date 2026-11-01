@@ -5,3 +5,4 @@ class WasmPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = WasmPlatform()
+actual val showSplash: Boolean = false
