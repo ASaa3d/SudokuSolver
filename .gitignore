@@ -20,3 +20,5 @@ node_modules/
 /androidApp/src/main/jniLibs/
 /androidApp/src/main/assets/
 */build/
+/shared/src/androidMain/assets/
+/shared/src/androidMain/jniLibs/
