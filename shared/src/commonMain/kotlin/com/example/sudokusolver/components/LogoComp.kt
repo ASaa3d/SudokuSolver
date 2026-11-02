@@ -16,9 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.logo_description
 import sudokusolver.shared.generated.resources.sudoku_logo_dark
 import sudokusolver.shared.generated.resources.sudoku_logo_light
+import sudokusolver.shared.generated.resources.sudoku_solver
 
 @Composable
 fun LogoComp(modifier: Modifier = Modifier)
@@ -29,14 +32,14 @@ fun LogoComp(modifier: Modifier = Modifier)
     ) {
         Image(
             painter = painterResource(if (isSystemInDarkTheme()) Res.drawable.sudoku_logo_dark else Res.drawable.sudoku_logo_light),
-            contentDescription = "logo",
-            modifier = Modifier.fillMaxWidth(0.2f).padding(all = 8.dp)
+            contentDescription = stringResource(Res.string.logo_description),
+            modifier = Modifier.weight(0.17f).padding(all = 8.dp)
         )
         Text(
-            modifier = Modifier.fillMaxWidth(0.8f).align(Alignment.CenterVertically),
-            text = "Sudoku Solver",
+            modifier = Modifier.weight(0.83f).align(Alignment.CenterVertically),
+            text = stringResource(Res.string.sudoku_solver),
             textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 36.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = MaterialTheme.typography.labelLarge.fontFamily

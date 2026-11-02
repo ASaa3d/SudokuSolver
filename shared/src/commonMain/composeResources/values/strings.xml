@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SudokuSolver</string>
+    <string name="sign_in">Sign in</string>
+    <string name="logo_description">logo</string>
+    <string name="sudoku_solver">Sudoku Solver</string>
+    <string name="dont_have_an_account">Don&#39;t have an account?</string>
+    <string name="create_now">Create now</string>
+    <string name="email">E-mail</string>
+    <string name="email_placeholder">example@gmail.com</string>
+    <string name="password">Password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="log_in">Log in</string>
+    <string name="or_text">OR</string>
+    <string name="google_icon_description">Google icon</string>
+    <string name="continue_with_google">Continue with Google</string>
+</resources>

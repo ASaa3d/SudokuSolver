@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.serialization.core)
+            implementation(libs.material3.icons.extended)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
