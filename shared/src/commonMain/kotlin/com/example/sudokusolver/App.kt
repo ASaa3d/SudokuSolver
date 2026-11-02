@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
+import com.example.sudokusolver.auth.presentation.LoginScreen
 import com.example.sudokusolver.navigation.Home
 import com.example.sudokusolver.navigation.Splash
 import com.example.sudokusolver.navigation.navConfig
@@ -27,16 +29,18 @@ import org.koin.compose.viewmodel.koinViewModel
 
 import sudokusolver.shared.generated.resources.Res
 import sudokusolver.shared.generated.resources.compose_multiplatform
+import theme.AppTheme
+
 
 @Composable
 @Preview
 fun App(
     sudokuViewModel: SudokuViewModel = koinViewModel()
 ) {
-    val backStack = rememberNavBackStack(navConfig, Splash)
+    val backStack = rememberNavBackStack(navConfig, if (showSplash) Splash else Home )
 
 
-    MaterialTheme {
+    AppTheme {
         var showContent by remember { mutableStateOf(false) }
         NavDisplay(
             backStack = backStack,
@@ -44,45 +48,16 @@ fun App(
             entryProvider = entryProvider {
                 entry<Splash> {
                     SplashScreen(
-                        onFinished = {
-                            // Replace splash with home so Back doesn't return to it
-                            backStack.add(Home)
-                            backStack.remove(Splash)
-                        }
+                        navBackStack = backStack
                     )
                 }
                 entry<Home> {
-//                HomeScreen()
+                    LoginScreen(
+                        navBackStack = backStack,
+                    )
                 }
             }
         )
-//        Column(
-//            modifier = Modifier
-//                .background(MaterialTheme.colorScheme.primaryContainer)
-//                .safeContentPadding()
-//                .fillMaxSize(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//        ) {
-//
-//           if(sudokuViewModel.recState) {
-//               Text(
-//                   text = "we can see sudoku c++ code",
-//               )
-//           }
-//
-//            Button(onClick = { showContent = !showContent }) {
-//                Text("Click me!")
-//            }
-//            AnimatedVisibility(showContent) {
-//                val greeting = remember { Greeting().greet() }
-//                Column(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                ) {
-//                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-//                    Text("Compose: $greeting")
-//                }
-//            }
-//        }
+
     }
 }
