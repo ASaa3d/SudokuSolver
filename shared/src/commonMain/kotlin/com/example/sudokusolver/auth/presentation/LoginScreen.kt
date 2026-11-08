@@ -1,9 +1,7 @@
 package com.example.sudokusolver.auth.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -21,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -35,8 +31,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,9 +51,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import com.example.sudokusolver.auth.presentation.event.LoginEvent
+import com.example.sudokusolver.auth.presentation.state.LoginState
+import com.example.sudokusolver.auth.presentation.viewmodel.LoginViewModel
 import com.example.sudokusolver.components.LogoComp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import sudokusolver.shared.generated.resources.Res
 import sudokusolver.shared.generated.resources.continue_with_google
 import sudokusolver.shared.generated.resources.create_now
@@ -73,12 +80,53 @@ import sudokusolver.shared.generated.resources.show_password
 import sudokusolver.shared.generated.resources.sign_in
 
 @Composable
+fun LoginScreen(
+    navBackStack: NavBackStack<NavKey>,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = koinViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                LoginEvent.LoggedIn -> {}
+                LoginEvent.NavigateToSignUp -> {}
+                LoginEvent.NavigateToForgotPassword -> {}
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {},
+
+        modifier= modifier.fillMaxSize()
+    ) { paddingValues ->
+        LoginComponent(
+            modifier = Modifier.padding(paddingValues),
+            state=state,
+            onCreateNewAccount = viewModel::onCreateAccountClick,
+            onForgetPassword = viewModel::onForgotPasswordClick,
+            onLogIn = viewModel::onLoginClick,
+            onPasswordChange = viewModel::onPasswordChange,
+            onEmailChange = viewModel::onEmailChange,
+        )
+
+    }
+}
+
+
+@Composable
 fun LoginComponent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: LoginState,
+    onPasswordChange: (String)->Unit,
+    onEmailChange: (String)->Unit,
+    onCreateNewAccount: () -> Unit,
+    onForgetPassword: () -> Unit,
+    onLogIn: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    val emailState = rememberTextFieldState()
-    var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
 
@@ -116,7 +164,7 @@ fun LoginComponent(
                     fontSize = 14.sp
                 )
                 Text(
-                    modifier = Modifier.clickable(enabled = true, onClick = { TODO() })
+                    modifier = Modifier.clickable(enabled = true, onClick = onCreateNewAccount)
                         .alignByBaseline(),
                     text = stringResource(Res.string.create_now),
                     fontWeight = FontWeight.SemiBold,
@@ -133,13 +181,14 @@ fun LoginComponent(
                 style = MaterialTheme.typography.titleSmall
             )
             OutlinedTextField(
-                state = emailState,
+                value = state.email,
+                onValueChange = onEmailChange,
                 modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                 placeholder = { Text(stringResource(Res.string.email_placeholder)) },
                 textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 shape = RoundedCornerShape(8.dp),
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-
             )
             Spacer(Modifier.height(20.dp))
             Text(
@@ -149,9 +198,8 @@ fun LoginComponent(
                 style = MaterialTheme.typography.titleSmall
             )
             OutlinedTextField(
-
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = onPasswordChange,
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                 trailingIcon = {
@@ -195,7 +243,7 @@ fun LoginComponent(
 
 
                 Text(
-                    modifier = Modifier.clickable(enabled = true, onClick = { TODO() })
+                    modifier = Modifier.clickable(enabled = true, onClick = onForgetPassword)
                         .alignByBaseline(),
                     text = stringResource(Res.string.forget_password),
                     style = TextStyle(textDecoration = TextDecoration.Underline),
@@ -216,7 +264,7 @@ fun LoginComponent(
                     disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
                     disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
                 ),
-                onClick = { TODO() },
+                onClick = onLogIn,
 
                 )
             {
@@ -256,7 +304,8 @@ fun LoginComponent(
                     disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
                     disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
                 ),
-                onClick = { TODO() },
+                onClick = { //TODO
+                },
 
                 )
             {

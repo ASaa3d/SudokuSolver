@@ -8,4 +8,5 @@ class SudokuViewModel(
 ) : ViewModel() {
     val recState = (sudokuRecognizer != null)
 
+
 }

@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VerifyAccountDto(
-    val userId: Int,
+    val email: String,
     val code: String
 )

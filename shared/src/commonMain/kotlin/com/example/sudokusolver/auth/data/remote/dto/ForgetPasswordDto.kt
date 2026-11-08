@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ForgetPasswordDto(
-    val emailOrPhone: String
+    val email: String
 )

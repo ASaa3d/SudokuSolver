@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 data class SignUpDto(
     val userName: String,
     val email: String,
-    val phone: String?,
     val password: String,
 )
 
@@ -15,7 +14,6 @@ fun SignUpData.toDto(): SignUpDto {
     return SignUpDto(
         userName=this.userName,
         email=this.email,
-        phone= this.phone.takeIf { it.isNotBlank() },
         password=this.password,
     )
 }
