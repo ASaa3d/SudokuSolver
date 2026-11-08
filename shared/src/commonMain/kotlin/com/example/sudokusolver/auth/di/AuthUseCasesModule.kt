@@ -7,7 +7,6 @@ import com.example.sudokusolver.auth.domain.repository.AuthRepository
 import com.example.sudokusolver.auth.domain.usecase.ResetPasswordEmailUseCase
 import com.example.sudokusolver.auth.domain.usecase.GetTokenUseCase
 import com.example.sudokusolver.auth.domain.usecase.LoginUseCase
-import com.example.sudokusolver.auth.domain.usecase.PingUseCase
 import com.example.sudokusolver.auth.domain.usecase.ResendVerificationUseCase
 import com.example.sudokusolver.auth.domain.usecase.ResetPasswordUseCase
 import com.example.sudokusolver.auth.domain.usecase.SignUpUseCase
@@ -33,7 +32,6 @@ val authModule = module {
     viewModelOf(::ResetPasswordCodeViewModel)
     viewModelOf(::ResetPasswordViewModel)
     factoryOf(::LoginUseCase)
-    factoryOf(::PingUseCase)
     factoryOf(::VerifyAccountUseCase)
     factoryOf(::SignUpUseCase)
     factoryOf(::ResetPasswordEmailUseCase)

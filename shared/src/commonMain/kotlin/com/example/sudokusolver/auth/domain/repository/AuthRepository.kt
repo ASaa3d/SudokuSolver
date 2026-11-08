@@ -5,7 +5,6 @@ import com.example.sudokusolver.auth.domain.model.SignUpData
 
 interface AuthRepository {
 
-    suspend fun ping():Result<Unit>
     suspend fun login(loginData: LoginData): Result<Unit>
     suspend fun verify(email: String, code: String): Result<Unit>
     suspend fun signUp(signUpData: SignUpData): Result<Int>

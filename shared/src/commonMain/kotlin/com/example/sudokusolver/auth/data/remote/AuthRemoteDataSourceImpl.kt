@@ -19,9 +19,6 @@ class AuthRemoteDataSourceImpl(
 ) : AuthRemoteDataSource {
 
 
-    override suspend fun ping(){
-        httpClient.get("/auth/ping")
-    }
 
     override suspend fun login(loginData: LoginData): String {
         val loginResponse : LoginResponseDto= httpClient.post("/auth/login") {setBody(loginData)}.body()

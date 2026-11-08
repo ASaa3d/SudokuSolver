@@ -100,6 +100,7 @@ kotlin {
             implementation(libs.ktor.client.content)
             implementation(libs.ktor.serialization)
             implementation(libs.ktor.client.logging)
+            implementation(libs.compose.material3.adaptive)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

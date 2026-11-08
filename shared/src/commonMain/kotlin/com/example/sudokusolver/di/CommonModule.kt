@@ -4,6 +4,7 @@ import com.example.sudokusolver.BuildKonfig
 import core.ApiError
 import core.ApiException
 import com.example.sudokusolver.auth.di.authModule
+import com.example.sudokusolver.splash.di.splashModule
 import com.example.sudokusolver.datastore.LocalDataSource
 import com.example.sudokusolver.datastore.LocalDataSourceImpl
 import com.example.sudokusolver.sudoku.SudokuViewModel
@@ -29,7 +30,7 @@ import org.koin.dsl.module
 val commonModule = module {
     viewModel { SudokuViewModel(sudokuRecognizer = getOrNull()) }
     singleOf(::LocalDataSourceImpl) bind LocalDataSource::class
-    includes(authModule)
+    includes(authModule, splashModule)
     single {
         Json {
             prettyPrint = true
@@ -74,5 +75,3 @@ val commonModule = module {
         }
     }
 }
-
-

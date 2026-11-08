@@ -27,9 +27,15 @@ sealed interface Screen : NavKey {
 val navConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(Screen.Splash::class,Screen.Splash.serializer())
-            subclass(Screen.Decider::class,Screen.Decider.serializer())
-            subclass(Screen.Home::class,Screen.Home.serializer())
+            subclass(Screen.Splash::class, Screen.Splash.serializer())
+            subclass(Screen.Decider::class, Screen.Decider.serializer())
+            subclass(Screen.Login::class, Screen.Login.serializer())
+            subclass(Screen.SignUp::class, Screen.SignUp.serializer())
+            subclass(Screen.VerifyAccount::class, Screen.VerifyAccount.serializer())
+            subclass(Screen.ResetAccountEntry::class, Screen.ResetAccountEntry.serializer())
+            subclass(Screen.ResetAccountCode::class, Screen.ResetAccountCode.serializer())
+            subclass(Screen.ResetPassword::class, Screen.ResetPassword.serializer())
+            subclass(Screen.Home::class, Screen.Home.serializer())
         }
     }
 }

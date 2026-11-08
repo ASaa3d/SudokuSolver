@@ -21,8 +21,6 @@ class AuthRepositoryImpl(
         private const val TOKEN_KEY :String = "access_token"
         private const val USER_ID_KEY :String = "user_id"
     }
-    override suspend fun ping() : Result<Unit> = safeCall { remoteDataSource.ping() }
-
 
     override suspend fun login(loginData: LoginData): Result<Unit> = safeCall {
         remoteDataSource.login(loginData).also { token ->

@@ -9,7 +9,6 @@ import com.example.sudokusolver.auth.domain.model.LoginData
 import com.example.sudokusolver.auth.domain.model.SignUpData
 
 interface AuthRemoteDataSource {
-    suspend fun ping():Unit
     suspend fun login(loginData: LoginData): String
     suspend fun verify(verifyDto: VerifyAccountDto): Unit
     suspend fun signUp(signUpData: SignUpData): Int

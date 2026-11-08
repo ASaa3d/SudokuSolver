@@ -18,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -34,6 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -55,8 +55,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import androidx.window.core.layout.WindowSizeClass
 import com.example.sudokusolver.auth.presentation.event.LoginEvent
 import com.example.sudokusolver.auth.presentation.state.LoginState
+import com.example.sudokusolver.auth.presentation.view.LoginScreenCompact
 import com.example.sudokusolver.auth.presentation.viewmodel.LoginViewModel
 import com.example.sudokusolver.components.LogoComp
 import org.jetbrains.compose.resources.painterResource
@@ -102,7 +104,7 @@ fun LoginScreen(
 
         modifier= modifier.fillMaxSize()
     ) { paddingValues ->
-        LoginComponent(
+        LoginScreenContent(
             modifier = Modifier.padding(paddingValues),
             state=state,
             onCreateNewAccount = viewModel::onCreateAccountClick,
@@ -117,7 +119,7 @@ fun LoginScreen(
 
 
 @Composable
-fun LoginComponent(
+fun LoginScreenContent(
     modifier: Modifier = Modifier,
     state: LoginState,
     onPasswordChange: (String)->Unit,
@@ -126,218 +128,39 @@ fun LoginComponent(
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
-    var isPasswordVisible by remember { mutableStateOf(false) }
-    var checked by remember { mutableStateOf(false) }
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val windowSizeClass = adaptiveInfo.windowSizeClass
 
-    Column(
-        modifier = modifier
-            .verticalScroll(scrollState)
-            .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = 15.dp, vertical = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
 
+    when {
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) ->
+            LoginScreenCompact(
+                modifier = modifier,
+                state= state,
+                onPasswordChange = onPasswordChange,
+                onEmailChange = onEmailChange,
+                onCreateNewAccount = onCreateNewAccount,
+                onForgetPassword = onForgetPassword,
+                onLogIn = onLogIn,
+            )
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) ->
+            LoginScreenCompact(
+                modifier = modifier,
+                state= state,
+                onPasswordChange = onPasswordChange,
+                onEmailChange = onEmailChange,
+                onCreateNewAccount = onCreateNewAccount,
+                onForgetPassword = onForgetPassword,
+                onLogIn = onLogIn,
+            )
+        else -> LoginScreenCompact(
+            modifier = modifier,
+            state= state,
+            onPasswordChange = onPasswordChange,
+            onEmailChange = onEmailChange,
+            onCreateNewAccount = onCreateNewAccount,
+            onForgetPassword = onForgetPassword,
+            onLogIn = onLogIn,
         )
-    {
-        LogoComp(modifier.fillMaxHeight(0.2f))
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.fillMaxHeight(0.8f).padding(start = 40.dp, end = 40.dp, top = 40.dp)
-        ) {
-            Text(
-                text = stringResource(Res.string.sign_in),
-                fontSize = 30.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Bold,
-                fontFamily = MaterialTheme.typography.labelLarge.fontFamily
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically)
-            )
-            {
-                Text(
-                    modifier = Modifier.alignByBaseline(),
-                    text = stringResource(Res.string.dont_have_an_account),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 14.sp
-                )
-                Text(
-                    modifier = Modifier.clickable(enabled = true, onClick = onCreateNewAccount)
-                        .alignByBaseline(),
-                    text = stringResource(Res.string.create_now),
-                    fontWeight = FontWeight.SemiBold,
-                    style = TextStyle(textDecoration = TextDecoration.Underline),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 14.sp
-                )
-            }
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = stringResource(Res.string.email),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.titleSmall
-            )
-            OutlinedTextField(
-                value = state.email,
-                onValueChange = onEmailChange,
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                placeholder = { Text(stringResource(Res.string.email_placeholder)) },
-                textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                shape = RoundedCornerShape(8.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = stringResource(Res.string.password),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 14.sp,
-                style = MaterialTheme.typography.titleSmall
-            )
-            OutlinedTextField(
-                value = state.password,
-                onValueChange = onPasswordChange,
-                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                trailingIcon = {
-                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                        Icon(
-                            imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = if (isPasswordVisible) stringResource(Res.string.hide_password) else stringResource(Res.string.show_password)
-                        )
-                    }
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                shape = RoundedCornerShape(8.dp),
-            )
-            Row(
-                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(top = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            )
-            {
-                Row(
-                    modifier = Modifier.alignByBaseline(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                )
-                {
-                    Checkbox(
-                        checked = checked,
-                        onCheckedChange = { checked = it },
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = stringResource(Res.string.remember_me),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 14.sp
-                    )
-
-                }
-
-
-
-                Text(
-                    modifier = Modifier.clickable(enabled = true, onClick = onForgetPassword)
-                        .alignByBaseline(),
-                    text = stringResource(Res.string.forget_password),
-                    style = TextStyle(textDecoration = TextDecoration.Underline),
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 14.sp
-                )
-            }
-
-            Button(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 30.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-                    disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-                ),
-                onClick = onLogIn,
-
-                )
-            {
-                Text(
-                    text = stringResource(Res.string.log_in),
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily
-                )
-            }
-
-
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top=20.dp),
-                verticalAlignment = Alignment.CenterVertically
-
-            )
-            {
-                HorizontalDivider(color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.fillMaxWidth(0.45f))
-                Text(
-                    modifier = Modifier.alignByBaseline().padding(horizontal = 5.dp),
-                    text = stringResource(Res.string.or_text),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontSize = 12.sp
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.tertiary)
-            }
-
-            Button(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 30.dp),
-                shape = CircleShape,
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary,
-                    disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-                    disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-                ),
-                onClick = { //TODO
-                },
-
-                )
-            {
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
-                )
-                {
-                    Icon(
-                        modifier = Modifier.size(25.dp).align(Alignment.CenterStart),
-                        painter = painterResource(Res.drawable.google_noir),
-                        contentDescription = stringResource(Res.string.google_icon_description)
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = stringResource(Res.string.continue_with_google),
-                        textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.W500,
-                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily
-                    )
-                }
-            }
-
-
-
-
-
-
-
-
-        }
-
     }
-
 }
