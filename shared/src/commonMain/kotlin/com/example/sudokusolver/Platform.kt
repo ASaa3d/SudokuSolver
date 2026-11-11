@@ -1,7 +1,5 @@
 package com.example.sudokusolver
 
-import com.example.sudokusolver.sudoku.SudokuRecognizer
-
 
 interface Platform {
     val name: String

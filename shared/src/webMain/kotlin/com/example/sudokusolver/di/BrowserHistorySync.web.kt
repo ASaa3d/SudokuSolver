@@ -9,8 +9,9 @@ import kotlinx.browser.window
 import org.w3c.dom.events.Event
 
 private class HistoryTracker {
-    var depth = 1          // number of history entries we believe exist
-    var ignorePop = 0      // popstate events caused by our own history.go()
+    var index = 0                          // current history position (0-based)
+    var ignorePop = 0                      // popstate events caused by our own history.go()
+    val entries = mutableListOf<NavKey>()  // entries[i] = screen at history index i (keeps forward entries)
 }
 
 @OptIn(ExperimentalWasmJsInterop::class)
@@ -18,41 +19,67 @@ private class HistoryTracker {
 fun BrowserHistorySync(backStack: NavBackStack<NavKey>) {
     val tracker = remember { HistoryTracker() }
 
-    // Browser Back/Forward pressed -> pop our back stack
+    // Browser Back/Forward -> update our back stack
     DisposableEffect(Unit) {
         val listener: (Event) -> Unit = {
             if (tracker.ignorePop > 0) {
                 tracker.ignorePop--
             } else {
-                tracker.depth = (tracker.depth - 1).coerceAtLeast(1)
-                if (backStack.size > 1) backStack.removeLastOrNull()
+                val target = (window.history.state as? JsNumber)?.toInt() ?: 0
+                val current = tracker.index
+
+                when {
+                    target < current -> {                       // Back
+                        tracker.index = target                  // set BEFORE touching the stack
+                        while (backStack.size > target + 1) backStack.removeLastOrNull()
+                    }
+                    target > current -> {                       // Forward
+                        val screens = (backStack.size..target).map { tracker.entries.getOrNull(it) }
+                        if (screens.all { it != null }) {
+                            tracker.index = target
+                            screens.forEach { backStack.add(it!!) }
+                        } else {
+                            // forward entry we have no screen for (e.g. after a reload): bounce back
+                            tracker.ignorePop = 1
+                            tracker.index = backStack.size - 1
+                            window.history.go(tracker.index - target)
+                        }
+                    }
+                }
             }
         }
         window.addEventListener("popstate", listener)
         onDispose { window.removeEventListener("popstate", listener) }
     }
 
+    // In-app navigation -> update browser history
     LaunchedEffect(backStack) {
         snapshotFlow { backStack.size to backStack.lastOrNull() }.collect { (size, top) ->
+            if (top == null || top is Screen.Splash) return@collect   // keep the incoming URL while Splash resolves it
+
             val path = (top as? Screen)?.toUrlPath() ?: "/"
+            val targetIndex = size - 1
+
             when {
-                size > tracker.depth -> {
-                    repeat(size - tracker.depth - 1) {
-                        window.history.pushState(null, "", window.location.href)
+                targetIndex > tracker.index -> {                // app pushed
+                    for (i in (tracker.index + 1)..targetIndex) {
+                        val url = if (i == targetIndex) path else window.location.href
+                        window.history.pushState(i.toJsNumber(), "", url)
                     }
-                    window.history.pushState(null, "", path)
-                    tracker.depth = size
+                    tracker.index = targetIndex
+                    tracker.entries.clear()                     // a push discards forward history
+                    tracker.entries.addAll(backStack)
                 }
-                size < tracker.depth -> {
-                    val diff = tracker.depth - size
+                targetIndex < tracker.index -> {                // app popped (in-app back button)
+                    val diff = tracker.index - targetIndex
                     tracker.ignorePop = 1
-                    tracker.depth = size
-                    window.history.go(-diff)
-                    // note: URL is whatever entry we land on
+                    tracker.index = targetIndex
+                    window.history.go(-diff)                    // forward entries stay in tracker.entries
                 }
-                else -> {
-                    // same size, different top screen: replaced in place
-                    window.history.replaceState(null, "", path)
+                else -> {                                       // replaced in place (Splash -> real screen) or Back/Forward settled
+                    if (tracker.entries.size > targetIndex) tracker.entries[targetIndex] = top
+                    else { tracker.entries.clear(); tracker.entries.addAll(backStack) }
+                    window.history.replaceState(targetIndex.toJsNumber(), "", path)
                 }
             }
         }

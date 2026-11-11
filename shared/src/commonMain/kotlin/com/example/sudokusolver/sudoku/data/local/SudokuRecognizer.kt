@@ -1,4 +1,6 @@
-package com.example.sudokusolver.sudoku
+package com.example.sudokusolver.sudoku.data.local
+
+import com.example.sudokusolver.sudoku.domain.model.PixelFormat
 
 interface SudokuRecognizer : AutoCloseable {
 

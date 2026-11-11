@@ -60,7 +60,6 @@ fun LoginScreen(
                 }
                 is LoginEvent.NavigateToSignUp -> {
                     navBackStack.add(Screen.SignUp)
-                    navBackStack.remove(Screen.Login)
                 }
                 is LoginEvent.NavigateToForgotPassword -> {
                     navBackStack.add(Screen.ResetAccountEmail)

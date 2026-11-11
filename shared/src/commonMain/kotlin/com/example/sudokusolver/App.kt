@@ -27,11 +27,13 @@ import theme.AppTheme
 @Composable
 @Preview
 fun App(
-    deepLinkRequest: DeepLinkRequest?=null
+    deepLinkRequest: DeepLinkRequest?=null,
+    initialTarget: String? = null,
 ) {
+    val startTarget = deepLinkRequest?.uri?.toString() ?: initialTarget
     val backStack = rememberNavBackStack(
         navConfig,
-        Screen.Splash(target = deepLinkRequest?.uri.toString())
+        Screen.Splash(target = startTarget)
     )
     // Links that arrive while the app is already running (Android onNewIntent)
     var handledUri by rememberSaveable { mutableStateOf(deepLinkRequest?.uri) }

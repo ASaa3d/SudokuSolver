@@ -1,8 +1,8 @@
 package com.example.sudokusolver
 
 import android.content.Context
-import com.example.sudokusolver.sudoku.PixelFormat
-import com.example.sudokusolver.sudoku.SudokuRecognizer
+import com.example.sudokusolver.sudoku.domain.model.PixelFormat
+import com.example.sudokusolver.sudoku.data.local.SudokuRecognizer
 
 class AndroidSudokuRecognizer(context: Context) : SudokuRecognizer {
 

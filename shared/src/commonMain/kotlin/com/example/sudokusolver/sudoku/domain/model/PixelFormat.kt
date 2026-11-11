@@ -1,4 +1,4 @@
-package com.example.sudokusolver.sudoku
+package com.example.sudokusolver.sudoku.domain.model
 
 enum class PixelFormat(val code: Int) {
     GRAY8(1),

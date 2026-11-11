@@ -76,31 +76,34 @@ fun SplashScreen(
     var animationFinished by remember { mutableStateOf(false) }
     var pendingEvent by remember { mutableStateOf<SplashEvent?>(null) }
 
-
+    fun replaceSplash(screen: Screen) {
+        // single operation, so the history sync never sees a half-updated stack
+        navBackStack[navBackStack.lastIndex] = screen
+    }
 
     fun navigate(event: SplashEvent) {
 
         when (event) {
             is SplashEvent.NavigateToHome -> {
-                navBackStack.add(Screen.Home(event.email, event.isGuest))
+                replaceSplash(Screen.Home(event.email, event.isGuest))
             }
             is SplashEvent.NavigateToLogin -> {
-                navBackStack.add(Screen.Login)
+                replaceSplash(Screen.Login)
             }
             is SplashEvent.NavigateToSignUp -> {
-                navBackStack.add(Screen.SignUp)
+                replaceSplash(Screen.SignUp)
             }
             is SplashEvent.NavigateToVerifyAccount -> {
-                navBackStack.add(Screen.VerifyAccount(event.email, event.code))
+                replaceSplash(Screen.VerifyAccount(event.email, event.code))
             }
             is SplashEvent.NavigateToResetAccountEmail -> {
-                navBackStack.add(Screen.ResetAccountEmail)
+                replaceSplash(Screen.ResetAccountEmail)
             }
             is SplashEvent.NavigateToResetAccountCode -> {
-                navBackStack.add(Screen.ResetAccountCode(event.email, event.isVerifyAccount))
+                replaceSplash(Screen.ResetAccountCode(event.email, event.isVerifyAccount))
             }
             is SplashEvent.NavigateToResetPassword -> {
-                navBackStack.add(Screen.ResetPassword(event.email, event.code))
+                replaceSplash(Screen.ResetPassword(event.email, event.code))
             }
             is SplashEvent.ResolveTarget -> {
                 viewModel.resolveTarget(target = target, email = event.email)

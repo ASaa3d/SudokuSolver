@@ -2,7 +2,7 @@ package com.example.sudokusolver
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.example.sudokusolver.sudoku.PixelFormat
+import com.example.sudokusolver.sudoku.domain.model.PixelFormat
 import java.io.Closeable
 import java.io.File
 

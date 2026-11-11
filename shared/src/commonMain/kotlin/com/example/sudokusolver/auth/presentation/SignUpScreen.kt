@@ -48,7 +48,6 @@ fun SignUpScreen(
                 }
                 is SignUpEvent.NavigateToLogin -> {
                     navBackStack.add(Screen.Login)
-                    navBackStack.remove(Screen.SignUp)
                 }
             }
         }
