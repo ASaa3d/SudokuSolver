@@ -1,56 +1,32 @@
 package com.example.sudokusolver.auth.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import androidx.navigation3.runtime.NavBackStack
@@ -58,28 +34,13 @@ import androidx.navigation3.runtime.NavKey
 import androidx.window.core.layout.WindowSizeClass
 import com.example.sudokusolver.auth.presentation.event.LoginEvent
 import com.example.sudokusolver.auth.presentation.state.LoginState
-import com.example.sudokusolver.auth.presentation.view.LoginScreenCompact
+import com.example.sudokusolver.auth.presentation.view.LoginScreenCompactLayout
+import com.example.sudokusolver.auth.presentation.view.LoginScreenExtendedLayout
 import com.example.sudokusolver.auth.presentation.viewmodel.LoginViewModel
-import com.example.sudokusolver.components.LogoComp
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.sudokusolver.components.CircularSnackBar
+import com.example.sudokusolver.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
-import sudokusolver.shared.generated.resources.Res
-import sudokusolver.shared.generated.resources.continue_with_google
-import sudokusolver.shared.generated.resources.create_now
-import sudokusolver.shared.generated.resources.dont_have_an_account
-import sudokusolver.shared.generated.resources.email
-import sudokusolver.shared.generated.resources.email_placeholder
-import sudokusolver.shared.generated.resources.forget_password
-import sudokusolver.shared.generated.resources.google_icon_description
-import sudokusolver.shared.generated.resources.google_noir
-import sudokusolver.shared.generated.resources.hide_password
-import sudokusolver.shared.generated.resources.log_in
-import sudokusolver.shared.generated.resources.or_text
-import sudokusolver.shared.generated.resources.password
-import sudokusolver.shared.generated.resources.remember_me
-import sudokusolver.shared.generated.resources.show_password
-import sudokusolver.shared.generated.resources.sign_in
+
 
 @Composable
 fun LoginScreen(
@@ -87,26 +48,58 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel()
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                LoginEvent.LoggedIn -> {}
-                LoginEvent.NavigateToSignUp -> {}
-                LoginEvent.NavigateToForgotPassword -> {}
+                is LoginEvent.LoggedIn -> {
+                    navBackStack.add(Screen.Home(event.email,false))
+                    navBackStack.removeLastOrNull()
+                }
+                is LoginEvent.NavigateToSignUp -> {
+                    navBackStack.add(Screen.SignUp)
+                    navBackStack.remove(Screen.Login)
+                }
+                is LoginEvent.NavigateToForgotPassword -> {
+                    navBackStack.add(Screen.ResetAccountEmail)
+                }
+                is LoginEvent.GuestLogin -> {
+                    navBackStack.add(Screen.Home("guest@user.com",true))
+                }
             }
+        }
+    }
+    LaunchedEffect(state.error) {
+        state.error?.let { message ->
+            val result = snackBarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+            viewModel.onErrorShown() // clear the error so it shows only once
         }
     }
 
     Scaffold(
         topBar = {},
+        snackbarHost = {SnackbarHost(
+            hostState = snackBarHostState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            snackbar = { data ->
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularSnackBar(message = data.visuals.message)
+                }
+            }
+        )},
 
-        modifier= modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) { paddingValues ->
         LoginScreenContent(
             modifier = Modifier.padding(paddingValues),
-            state=state,
+            state = state,
             onCreateNewAccount = viewModel::onCreateAccountClick,
             onForgetPassword = viewModel::onForgotPasswordClick,
             onLogIn = viewModel::onLoginClick,
@@ -122,40 +115,32 @@ fun LoginScreen(
 fun LoginScreenContent(
     modifier: Modifier = Modifier,
     state: LoginState,
-    onPasswordChange: (String)->Unit,
-    onEmailChange: (String)->Unit,
+    onPasswordChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
     onCreateNewAccount: () -> Unit,
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
 ) {
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val windowSizeClass = adaptiveInfo.windowSizeClass
+    val scrollState = rememberScrollState()
 
 
     when {
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) ->
-            LoginScreenCompact(
-                modifier = modifier,
-                state= state,
+            LoginScreenExtendedLayout(
+                modifier = modifier.fillMaxSize().verticalScroll(scrollState),
+                state = state,
                 onPasswordChange = onPasswordChange,
                 onEmailChange = onEmailChange,
                 onCreateNewAccount = onCreateNewAccount,
                 onForgetPassword = onForgetPassword,
                 onLogIn = onLogIn,
             )
-        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) ->
-            LoginScreenCompact(
-                modifier = modifier,
-                state= state,
-                onPasswordChange = onPasswordChange,
-                onEmailChange = onEmailChange,
-                onCreateNewAccount = onCreateNewAccount,
-                onForgetPassword = onForgetPassword,
-                onLogIn = onLogIn,
-            )
-        else -> LoginScreenCompact(
-            modifier = modifier,
-            state= state,
+
+        else -> LoginScreenCompactLayout(
+            modifier = modifier.verticalScroll(scrollState),
+            state = state,
             onPasswordChange = onPasswordChange,
             onEmailChange = onEmailChange,
             onCreateNewAccount = onCreateNewAccount,

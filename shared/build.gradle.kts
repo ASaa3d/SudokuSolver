@@ -1,4 +1,3 @@
-import com.android.utils.TraceUtils.simpleId
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
@@ -13,6 +12,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.codingfeline.buildkonfig)
+
 }
 
 val localProps = Properties().apply {
@@ -31,10 +31,12 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(STRING, "BASE_URL", config("BASE_URL_DEV"))
         buildConfigField(BOOLEAN, "DEBUG", "true")
+        buildConfigField(STRING, "DL_BASE_URL", config("DL_BASE_URL_DEV"))
     }
     defaultConfigs("prod") {
         buildConfigField(STRING, "BASE_URL", config("BASE_URL_PROD"))
         buildConfigField(BOOLEAN, "DEBUG", "false")
+        buildConfigField(STRING, "DL_BASE_URL", config("DL_BASE_URL_PROD"))
     }
     defaultConfigs("dev") {
         buildConfigField(STRING, "BASE_URL", config("BASE_URL_DEV"))
@@ -76,6 +78,7 @@ kotlin {
             implementation(libs.compose.uiTooling)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.android.splashscreen)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

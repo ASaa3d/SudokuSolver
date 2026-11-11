@@ -20,16 +20,25 @@ class SignUpViewModel(
         updateState { currentState.copy(password = value, passwordError = false, error = null) }
 
     fun onConfirmPasswordChange(value: String) =
-        updateState { currentState.copy(confirmPassword = value) }
+        updateState { currentState.copy(confirmPassword = value, error = null) }
 
     fun onUserNameChange(value: String) =
         updateState { currentState.copy(username = value, usernameError = false, error = null) }
+
+    fun onErrorShown() {
+        updateState { currentState.copy(error = null) }
+    }
 
     fun onLoginClick(){ sendEvent(SignUpEvent.NavigateToLogin) }
 
     fun onSignUpClick()
     {
         if (currentState.emailError || currentState.passwordError|| currentState.usernameError || currentState.isLoading) return
+        if (currentState.password != currentState.confirmPassword)
+        {
+            updateState { currentState.copy(error="Password and Confirm Password should be the same ") }
+            return
+        }
         viewModelScope.launch {
             updateState { currentState.copy(isLoading = true, error = null) }
 

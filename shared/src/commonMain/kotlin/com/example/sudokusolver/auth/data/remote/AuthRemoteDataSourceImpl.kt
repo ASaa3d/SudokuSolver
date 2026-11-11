@@ -2,6 +2,8 @@ package com.example.sudokusolver.auth.data.remote
 
 import com.example.sudokusolver.auth.data.remote.dto.ForgetPasswordDto
 import com.example.sudokusolver.auth.data.remote.dto.LoginResponseDto
+import com.example.sudokusolver.auth.data.remote.dto.ResendPasswordChangeDto
+import com.example.sudokusolver.auth.data.remote.dto.ResendVerificationDto
 import com.example.sudokusolver.auth.data.remote.dto.ResetPasswordDto
 import com.example.sudokusolver.auth.data.remote.dto.SignUpResponseDto
 import com.example.sudokusolver.auth.data.remote.dto.ValidateResetPasswordDto
@@ -30,7 +32,7 @@ class AuthRemoteDataSourceImpl(
     }
 
     override suspend fun signUp(signUpData: SignUpData): Int {
-        val response :SignUpResponseDto = httpClient.post("/auth/verify"){setBody(signUpData)}.body()
+        val response :SignUpResponseDto = httpClient.post("/auth/signup"){setBody(signUpData)}.body()
         return response.id
     }
 
@@ -47,8 +49,12 @@ class AuthRemoteDataSourceImpl(
         httpClient.post("/auth/reset-password/validate") {setBody(validateDto)}
     }
 
-    override suspend fun resendVerification(userId: Int) {
-        httpClient.post("/auth/resend-verification/${userId}")
+    override suspend fun resendVerification(resendDto: ResendVerificationDto) {
+        httpClient.post("/auth/resend-verification") {setBody(resendDto)}
+    }
+
+    override suspend fun resendPasswordChange(dto: ResendPasswordChangeDto) {
+        httpClient.post("/auth/resend-password-change") {setBody(dto)}
     }
 
 

@@ -9,9 +9,10 @@ interface AuthRepository {
     suspend fun verify(email: String, code: String): Result<Unit>
     suspend fun signUp(signUpData: SignUpData): Result<Int>
     suspend fun resetPasswordEmail(email: String):Result<Unit>
-    suspend fun resetPassword(email: String, newPassword: String):Result<Unit>
+    suspend fun resetPassword(email: String, newPassword: String, code: String):Result<Unit>
     suspend fun resetPasswordCode(email: String, code: String):Result<Unit>
-    suspend fun resendVerification(userId: Int):Result<Unit>
+    suspend fun resendVerification(email: String):Result<Unit>
+    suspend fun resendPasswordChange(email: String):Result<Unit>
     suspend fun getToken():Result<String>
 
 }

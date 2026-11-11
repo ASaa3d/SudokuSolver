@@ -7,11 +7,11 @@ import core.Validators
 class ResetPasswordUseCase(
     private val repo: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, newPassword: String): Result<Unit> {
+    suspend operator fun invoke(email: String, newPassword: String, code: String): Result<Unit> {
         return when {
             !Validators.isEmail(email) -> Result.failure(InputError.InvalidEmail)
             !Validators.isPassword(newPassword) -> Result.failure(InputError.InvalidPassword)
-            else -> repo.resetPassword(email = email, newPassword = newPassword)
+            else -> repo.resetPassword(email = email, newPassword = newPassword, code = code)
         }
     }
 }

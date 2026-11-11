@@ -13,3 +13,9 @@ fun createDataStore(storage: Storage<Preferences>): DataStore<Preferences> =
     DataStoreFactory.create(storage = storage)
 
 internal const val dataStoreFileName = "dice.preferences_pb"
+
+object Keys
+{
+    const val TOKEN_KEY :String = "access_token"
+    const val USER_ID_KEY :String = "user_id"
+}

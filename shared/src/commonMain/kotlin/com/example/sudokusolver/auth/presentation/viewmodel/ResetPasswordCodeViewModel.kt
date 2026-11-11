@@ -1,6 +1,8 @@
 package com.example.sudokusolver.auth.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.example.sudokusolver.auth.domain.usecase.ResendPasswordChangeUseCase
+import com.example.sudokusolver.auth.domain.usecase.ResendVerificationUseCase
 import core.BaseViewModel
 import com.example.sudokusolver.auth.domain.usecase.ResetPasswordCodeUseCase
 import com.example.sudokusolver.auth.domain.usecase.VerifyAccountUseCase
@@ -11,7 +13,9 @@ import kotlinx.coroutines.launch
 
 class ResetPasswordCodeViewModel(
     private val verifyAccountUseCase: VerifyAccountUseCase,
-    private val resetPasswordCodeUseCase: ResetPasswordCodeUseCase
+    private val resetPasswordCodeUseCase: ResetPasswordCodeUseCase,
+    private val resendVerificationUseCase: ResendVerificationUseCase,
+    private val resendPasswordChangeUseCase: ResendPasswordChangeUseCase
 ) : BaseViewModel<ResetPasswordCodeState, ResetPasswordCodeEvent>(ResetPasswordCodeState()) {
 
     fun onCodeChange(value: String) =
@@ -50,6 +54,32 @@ class ResetPasswordCodeViewModel(
                             else -> currentState.copy(error = e.message)
                         }
                     }
+                }
+            updateState { currentState.copy(isLoading = false) }
+        }
+    }
+
+    fun resendVerification(email: String) {
+        if (currentState.isLoading) return
+        viewModelScope.launch {
+            updateState { currentState.copy(isLoading = true, error = null) }
+
+            resendVerificationUseCase(email = email)
+                .onFailure { e ->
+                    updateState { currentState.copy(error = e.message) }
+                }
+            updateState { currentState.copy(isLoading = false) }
+        }
+    }
+
+    fun resendPasswordChange(email: String) {
+        if (currentState.isLoading) return
+        viewModelScope.launch {
+            updateState { currentState.copy(isLoading = true, error = null) }
+
+            resendPasswordChangeUseCase(email = email)
+                .onFailure { e ->
+                    updateState { currentState.copy(error = e.message) }
                 }
             updateState { currentState.copy(isLoading = false) }
         }

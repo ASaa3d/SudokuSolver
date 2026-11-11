@@ -1,6 +1,8 @@
 package com.example.sudokusolver.auth.data.remote
 
 import com.example.sudokusolver.auth.data.remote.dto.ForgetPasswordDto
+import com.example.sudokusolver.auth.data.remote.dto.ResendPasswordChangeDto
+import com.example.sudokusolver.auth.data.remote.dto.ResendVerificationDto
 import com.example.sudokusolver.auth.data.remote.dto.ResetPasswordDto
 import com.example.sudokusolver.auth.data.remote.dto.SignUpDto
 import com.example.sudokusolver.auth.data.remote.dto.ValidateResetPasswordDto
@@ -15,5 +17,6 @@ interface AuthRemoteDataSource {
     suspend fun forgotPassword(forgetPasswordDto: ForgetPasswordDto):Unit
     suspend fun resetPassword(resetPassDto: ResetPasswordDto):Unit
     suspend fun validateResetPassword(validateDto: ValidateResetPasswordDto):Unit
-    suspend fun resendVerification(userId: Int):Unit
+    suspend fun resendVerification(resendDto: ResendVerificationDto):Unit
+    suspend fun resendPasswordChange(dto: ResendPasswordChangeDto):Unit
 }

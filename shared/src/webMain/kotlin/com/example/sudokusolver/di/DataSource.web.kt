@@ -1,4 +1,4 @@
-package com.example.sudokusolver
+package com.example.sudokusolver.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.okio.WebLocalStorage

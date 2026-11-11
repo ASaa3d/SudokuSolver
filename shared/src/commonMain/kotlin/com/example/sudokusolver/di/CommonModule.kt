@@ -17,6 +17,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
@@ -39,6 +40,7 @@ val commonModule = module {
         }
     }
     single<HttpClient> {
+        val appJson = get<Json>()
         HttpClient {
             defaultRequest {
                 url(BuildKonfig.BASE_URL)
@@ -54,7 +56,7 @@ val commonModule = module {
                     }
                 }
             }
-            install(ContentNegotiation) { json(get<Json>()) }
+            install(ContentNegotiation) { json(appJson) }
             install(HttpTimeout) {
                 requestTimeoutMillis = 60_000
                 connectTimeoutMillis = 60_000
@@ -62,11 +64,14 @@ val commonModule = module {
             }
             HttpResponseValidator {
                 validateResponse { response ->
+
                     if (!response.status.isSuccess()) {
-                        val error = runCatching { response.body<ApiError>() }.getOrNull()
+                        val text = response.bodyAsText()
+                        val error = runCatching { appJson.decodeFromString<ApiError>(text) }.getOrNull()
                         throw ApiException(
-                            code = error?.code ?: response.status.value,
-                            message = error?.message ?: response.status.description,
+                            httpStatus = response.status.value,
+                            code = error?.code ?: "HTTP_${response.status.value}",
+                            message = if (response.status.value == 408) "Server Timeout" else error?.message ?: response.status.description
                         )
                     }
                 }

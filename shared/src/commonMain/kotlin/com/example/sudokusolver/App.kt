@@ -4,11 +4,19 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation3.runtime.deeplink.DeepLinkRequest
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.sudokusolver.auth.presentation.LoginScreen
+import com.example.sudokusolver.auth.presentation.OTPScreen
+import com.example.sudokusolver.auth.presentation.ResetPasswordEmailScreen
+import com.example.sudokusolver.auth.presentation.ResetPasswordScreen
+import com.example.sudokusolver.auth.presentation.SignUpScreen
+import com.example.sudokusolver.auth.presentation.VerifyAccountScreen
+import com.example.sudokusolver.di.PlatformBackSync
 import com.example.sudokusolver.navigation.Screen
 import com.example.sudokusolver.navigation.navConfig
 import com.example.sudokusolver.splash.SplashScreen
@@ -18,10 +26,25 @@ import theme.AppTheme
 
 @Composable
 @Preview
-fun App() {
-    val backStack = rememberNavBackStack(navConfig, Screen.Splash)
+fun App(
+    deepLinkRequest: DeepLinkRequest?=null
+) {
+    val backStack = rememberNavBackStack(
+        navConfig,
+        Screen.Splash(target = deepLinkRequest?.uri.toString())
+    )
+    // Links that arrive while the app is already running (Android onNewIntent)
+    var handledUri by rememberSaveable { mutableStateOf(deepLinkRequest?.uri) }
 
-
+    LaunchedEffect(deepLinkRequest?.uri) {
+        val uri = deepLinkRequest?.uri
+        if (uri != null && uri != handledUri) {
+            handledUri = uri
+            backStack.clear()
+            backStack.add(Screen.Splash(target = uri.toString()))
+        }
+    }
+    PlatformBackSync(backStack)
     AppTheme {
         var showContent by remember { mutableStateOf(false) }
         NavDisplay(
@@ -43,9 +66,10 @@ fun App() {
                         slideOutHorizontally(targetOffsetX = { it })
             },
             entryProvider = entryProvider {
-                entry<Screen.Splash> {
+                entry<Screen.Splash> { (target) ->
                     SplashScreen(
-                        navBackStack = backStack
+                        navBackStack = backStack,
+                        target = target
                     )
                 }
                 entry<Screen.Login> {
@@ -53,10 +77,38 @@ fun App() {
                         navBackStack = backStack,
                     )
                 }
-                entry<Screen.Home> { email ->
-                    LoginScreen(
+                entry<Screen.SignUp> {
+                    SignUpScreen(
                         navBackStack = backStack,
                     )
+                }
+                entry<Screen.VerifyAccount> { (email, code) ->
+                    VerifyAccountScreen(
+                        navBackStack = backStack,
+                        email = email,
+                        code = code
+                    )
+                }
+                entry<Screen.ResetAccountEmail> {
+                    ResetPasswordEmailScreen(
+                        navBackStack = backStack,
+                    )
+                }
+                entry<Screen.ResetPassword> {(email,code)->
+                    ResetPasswordScreen(
+                        navBackStack = backStack,
+                        email = email,
+                        code = code
+                    )
+                }
+                entry<Screen.ResetAccountCode> { (email,isVerifyAcc) ->
+                    OTPScreen(
+                        navBackStack = backStack,
+                        email=email,
+                        isVerifyAccount = isVerifyAcc
+                    )
+                }
+                entry<Screen.Home> {(email,isGuest)->
                 }
             }
         )

@@ -8,6 +8,7 @@ import com.example.sudokusolver.auth.domain.usecase.ResetPasswordEmailUseCase
 import com.example.sudokusolver.auth.domain.usecase.GetTokenUseCase
 import com.example.sudokusolver.auth.domain.usecase.LoginUseCase
 import com.example.sudokusolver.auth.domain.usecase.ResendVerificationUseCase
+import com.example.sudokusolver.auth.domain.usecase.ResendPasswordChangeUseCase
 import com.example.sudokusolver.auth.domain.usecase.ResetPasswordUseCase
 import com.example.sudokusolver.auth.domain.usecase.SignUpUseCase
 import com.example.sudokusolver.auth.domain.usecase.ResetPasswordCodeUseCase
@@ -17,6 +18,7 @@ import com.example.sudokusolver.auth.presentation.viewmodel.SignUpViewModel
 import com.example.sudokusolver.auth.presentation.viewmodel.ResetPasswordEmailViewModel
 import com.example.sudokusolver.auth.presentation.viewmodel.ResetPasswordCodeViewModel
 import com.example.sudokusolver.auth.presentation.viewmodel.ResetPasswordViewModel
+import com.example.sudokusolver.auth.presentation.viewmodel.VerifyAccountViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -31,6 +33,7 @@ val authModule = module {
     viewModelOf(::ResetPasswordEmailViewModel)
     viewModelOf(::ResetPasswordCodeViewModel)
     viewModelOf(::ResetPasswordViewModel)
+    viewModelOf(::VerifyAccountViewModel)
     factoryOf(::LoginUseCase)
     factoryOf(::VerifyAccountUseCase)
     factoryOf(::SignUpUseCase)
@@ -38,5 +41,6 @@ val authModule = module {
     factoryOf(::ResetPasswordUseCase)
     factoryOf(::ResetPasswordCodeUseCase)
     factoryOf(::ResendVerificationUseCase)
+    factoryOf(::ResendPasswordChangeUseCase)
     factoryOf(::GetTokenUseCase)
 }

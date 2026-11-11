@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.LazyGridPrefetchStrategy
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +31,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -48,7 +52,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sudokusolver.auth.presentation.state.LoginState
+import com.example.sudokusolver.components.LoadingShape
 import com.example.sudokusolver.components.LogoComp
+import com.example.sudokusolver.components.MorphingLoadingIndicator
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
@@ -67,33 +73,32 @@ import sudokusolver.shared.generated.resources.password
 import sudokusolver.shared.generated.resources.remember_me
 import sudokusolver.shared.generated.resources.show_password
 import sudokusolver.shared.generated.resources.sign_in
+import kotlin.coroutines.Continuation
 
 @Composable
-fun LoginScreenCompact(
+fun LoginScreenCompactLayout(
     modifier: Modifier = Modifier,
     state: LoginState,
-    onPasswordChange: (String)->Unit,
-    onEmailChange: (String)->Unit,
+    onPasswordChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
     onCreateNewAccount: () -> Unit,
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     var isPasswordVisible by remember { mutableStateOf(false) }
-    var checked by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.fillMaxSize()
-            .verticalScroll(scrollState)
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = 15.dp, vertical = 10.dp),
+            .padding(vertical = 30.dp, horizontal = 25.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        )
+    )
     {
-        LogoComp(modifier.weight(0.2f))
+        LogoComp(Modifier.fillMaxWidth().fillMaxHeight(0.2f))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.weight(0.8f).padding(start = 40.dp, end = 40.dp, top = 40.dp)
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.6f)
+                .padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             Text(
                 text = stringResource(Res.string.sign_in),
@@ -131,6 +136,7 @@ fun LoginScreenCompact(
                 style = MaterialTheme.typography.titleSmall
             )
             OutlinedTextField(
+                enabled = !state.isLoading,
                 value = state.email,
                 onValueChange = onEmailChange,
                 modifier = Modifier.fillMaxWidth().wrapContentHeight(),
@@ -138,9 +144,16 @@ fun LoginScreenCompact(
                 textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                isError = state.emailError,
+                supportingText = {
+                    if (state.emailError) Text(
+                        "Invalid Email",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(10.dp))
             Text(
                 text = stringResource(Res.string.password),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -156,7 +169,9 @@ fun LoginScreenCompact(
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = if (isPasswordVisible) stringResource(Res.string.hide_password) else stringResource(Res.string.show_password)
+                            contentDescription = if (isPasswordVisible) stringResource(Res.string.hide_password) else stringResource(
+                                Res.string.show_password
+                            )
                         )
                     }
                 },
@@ -164,34 +179,20 @@ fun LoginScreenCompact(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 shape = RoundedCornerShape(8.dp),
+                isError = state.passwordError,
+                supportingText = {
+                    if (state.passwordError) Text(
+                        "Password should have 1 uppercase letter,1 lowecase letter, 1 symbol(@#$%^&*) and 1 digit and have a min of 8 characters length",
+                        color = MaterialTheme.colorScheme.error,
+                        maxLines = 3
+                    )
+                }
             )
             Row(
-                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(top = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.End
             )
             {
-                Row(
-                    modifier = Modifier.alignByBaseline(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                )
-                {
-                    Checkbox(
-                        checked = checked,
-                        onCheckedChange = { checked = it },
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = stringResource(Res.string.remember_me),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 14.sp
-                    )
-
-                }
-
-
-
                 Text(
                     modifier = Modifier.clickable(enabled = true, onClick = onForgetPassword)
                         .alignByBaseline(),
@@ -203,89 +204,76 @@ fun LoginScreenCompact(
                 )
             }
 
-            Button(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 30.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-                    disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-                ),
-                onClick = onLogIn,
-
-                )
-            {
-                Text(
-                    text = stringResource(Res.string.log_in),
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily
-                )
-            }
 
 
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top=20.dp),
-                verticalAlignment = Alignment.CenterVertically
-
+            FlowRow(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                horizontalArrangement = Arrangement.spacedBy(30.dp),
+                verticalArrangement = Arrangement.spacedBy(30.dp),
+                maxItemsInEachRow = 2
             )
             {
-                HorizontalDivider(color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.fillMaxWidth(0.45f))
-                Text(
-                    modifier = Modifier.alignByBaseline().padding(horizontal = 5.dp),
-                    text = stringResource(Res.string.or_text),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontSize = 12.sp
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.tertiary)
-            }
+                Button(
+                    modifier = Modifier.weight(1f).widthIn(min = 250.dp)
+                        .wrapContentHeight(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
+                        disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
+                    ),
+                    onClick = onLogIn,
 
-            Button(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 30.dp),
-                shape = CircleShape,
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary,
-                    disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
-                    disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
-                ),
-                onClick = { //TODO
-                },
-
-                )
-            {
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
-                )
-                {
-                    Icon(
-                        modifier = Modifier.size(25.dp).align(Alignment.CenterStart),
-                        painter = painterResource(Res.drawable.google_noir),
-                        contentDescription = stringResource(Res.string.google_icon_description)
                     )
+                {
+                    if (state.isLoading) {
+                        MorphingLoadingIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            size = 32.dp,
+                            morphDurationMillis = 500,
+                            shapes = listOf(
+                                LoadingShape.Cookie,
+                                LoadingShape.Triangle,
+                                LoadingShape.Pentagon
+                            ),
+                        )
+
+                    } else {
+                        Text(
+                            text = stringResource(Res.string.log_in),
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily
+                        )
+                    }
+                }
+
+                Button(
+                    modifier = Modifier.weight(1f).widthIn(min = 250.dp)
+                        .wrapContentHeight(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                        disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
+                        disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
+                    ),
+                    onClick = { //TODO
+                    },
+
+                    )
+                {
                     Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = stringResource(Res.string.continue_with_google),
+                        modifier = Modifier.padding(vertical = 6.dp),
                         textAlign = TextAlign.Center,
+                        text = "Continue as Guest",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.W500,
+                        fontWeight = FontWeight.W600,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily
                     )
                 }
             }
-
-
-
-
-
-
-
-
         }
 
     }

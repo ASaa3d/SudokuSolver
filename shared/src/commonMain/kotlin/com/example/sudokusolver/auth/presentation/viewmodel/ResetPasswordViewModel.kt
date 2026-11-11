@@ -18,7 +18,11 @@ class ResetPasswordViewModel(
     fun onConfirmPasswordChange(value: String) =
         updateState { currentState.copy(confirmPassword = value, confirmPasswordError = false, error = null) }
 
-    fun onResetPasswordClick(email: String) {
+    fun onErrorShown() {
+        updateState { currentState.copy(error = null) }
+    }
+
+    fun resetPassword(code: String, email: String) {
         if (currentState.password != currentState.confirmPassword) {
             updateState { currentState.copy(confirmPasswordError = true, error = "Passwords do not match") }
             return
@@ -28,7 +32,7 @@ class ResetPasswordViewModel(
         viewModelScope.launch {
             updateState { currentState.copy(isLoading = true, error = null) }
 
-            resetPasswordUseCase(email = email, newPassword = currentState.password)
+            resetPasswordUseCase(email = email, newPassword = currentState.password, code = code)
                 .onSuccess { sendEvent(ResetPasswordEvent.PasswordReset) }
                 .onFailure { e ->
                     updateState {

@@ -1,11 +1,16 @@
 package com.example.sudokusolver.auth.domain.usecase
 
 import com.example.sudokusolver.auth.domain.repository.AuthRepository
+import core.InputError
+import core.Validators
 
 class ResendVerificationUseCase(
     private val repo: AuthRepository
 ) {
-    suspend operator fun invoke(userId: Int): Result<Unit> {
-        return repo.resendVerification(userId = userId)
+    suspend operator fun invoke(email: String): Result<Unit> {
+        if (!Validators.isEmail(email)) {
+            return Result.failure(InputError.InvalidEmail)
+        }
+        return repo.resendVerification(email = email)
     }
 }

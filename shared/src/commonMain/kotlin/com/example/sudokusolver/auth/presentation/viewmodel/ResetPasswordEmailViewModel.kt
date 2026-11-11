@@ -15,6 +15,10 @@ class ResetPasswordEmailViewModel(
     fun onEmailChange(value: String) =
         updateState { currentState.copy(email = value, emailError = false, error = null) }
 
+    fun onErrorShown() {
+        updateState { currentState.copy(error = null) }
+    }
+
     fun onEmailConfirmClick(){
         if (currentState.emailError || currentState.isLoading) return
         viewModelScope.launch {

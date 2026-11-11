@@ -5,9 +5,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiError(val code: Int, val message: String)
+data class ApiError(val code: String, val message: String)
 
-class ApiException(code:Int , message: String) : Exception()
+class ApiException(
+    val httpStatus: Int,
+    val code: String,
+    override val message: String
+) : Exception(message)
+
 sealed class InputError : Exception() {
     data object InvalidUserName : InputError()
     data object InvalidEmail : InputError()

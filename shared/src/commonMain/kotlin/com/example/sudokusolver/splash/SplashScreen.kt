@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,38 +67,62 @@ private const val PUZZLE = "120600045"
 fun SplashScreen(
     navBackStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
-    viewModel: SplashViewModel = koinViewModel()
+    viewModel: SplashViewModel = koinViewModel(),
+    target:String? = null
 ) {
+    println("splash target=$target vm=${viewModel.hashCode()}")
     val state by viewModel.state.collectAsStateWithLifecycle()
     var animationCycle by remember { mutableStateOf(0) }
     var animationFinished by remember { mutableStateOf(false) }
     var pendingEvent by remember { mutableStateOf<SplashEvent?>(null) }
 
+
+
     fun navigate(event: SplashEvent) {
+
         when (event) {
             is SplashEvent.NavigateToHome -> {
-                navBackStack.add(Screen.Home(event.email))
-                navBackStack.remove(Screen.Splash)
+                navBackStack.add(Screen.Home(event.email, event.isGuest))
             }
-            SplashEvent.NavigateToLogin -> {
+            is SplashEvent.NavigateToLogin -> {
                 navBackStack.add(Screen.Login)
-                navBackStack.remove(Screen.Splash)
+            }
+            is SplashEvent.NavigateToSignUp -> {
+                navBackStack.add(Screen.SignUp)
+            }
+            is SplashEvent.NavigateToVerifyAccount -> {
+                navBackStack.add(Screen.VerifyAccount(event.email, event.code))
+            }
+            is SplashEvent.NavigateToResetAccountEmail -> {
+                navBackStack.add(Screen.ResetAccountEmail)
+            }
+            is SplashEvent.NavigateToResetAccountCode -> {
+                navBackStack.add(Screen.ResetAccountCode(event.email, event.isVerifyAccount))
+            }
+            is SplashEvent.NavigateToResetPassword -> {
+                navBackStack.add(Screen.ResetPassword(event.email, event.code))
+            }
+            is SplashEvent.ResolveTarget -> {
+                viewModel.resolveTarget(target = target, email = event.email)
             }
         }
     }
+
 
     LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            pendingEvent = event
-            if (!state.isLoading && animationFinished) {
-                navigate(event)
-            }
-        }
+        println("pending event ${pendingEvent.toString()}")
+        viewModel.refresh() }
+
+    LaunchedEffect(Unit) {
+
+        viewModel.events.collect { pendingEvent = it }
     }
 
-    LaunchedEffect(state.isLoading) {
-        if (!state.isLoading && animationFinished) {
-            pendingEvent?.let { navigate(it) }
+    LaunchedEffect(pendingEvent, animationFinished, state.isLoading) {
+        val event = pendingEvent
+        if (event != null && animationFinished && !state.isLoading) {
+            pendingEvent = null
+            navigate(event)
         }
     }
 
@@ -109,7 +134,6 @@ fun SplashScreen(
                 animationCycle++
             } else {
                 animationFinished = true
-                pendingEvent?.let { navigate(it) }
             }
         }
     )
