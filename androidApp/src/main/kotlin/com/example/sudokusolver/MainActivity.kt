@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
+
         if (savedInstanceState == null) {
             deepLink = intent?.data?.toString()?.let { DeepLinkRequest(uri = it) }        }
 

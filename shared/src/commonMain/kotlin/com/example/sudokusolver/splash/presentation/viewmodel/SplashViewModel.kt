@@ -12,7 +12,9 @@ class SplashViewModel(
     private val refreshUseCase: RefreshUseCase,
 ) : BaseViewModel<SplashState, SplashEvent>(SplashState()) {
 
+    fun updateProfilePhoto(imageBytes: ByteArray) {
 
+    }
 
     fun refresh() {
         viewModelScope.launch {
@@ -44,7 +46,6 @@ class SplashViewModel(
         val parsed = parseUrl(target)
         val path = parsed.path
         val params = parsed.queryParams
-
         when (path) {
             "/login" -> {
                 if (isSignedIn) {

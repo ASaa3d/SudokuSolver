@@ -19,11 +19,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import sudokusolver.shared.generated.resources.Res
 import sudokusolver.shared.generated.resources.wallpaper
-import sudokusolver.shared.generated.resources.wallpaper2
 
 private val imagesGrid: List<DrawableResource> = listOf(
     Res.drawable.wallpaper,
-    Res.drawable.wallpaper2,
 )
 
 @Composable

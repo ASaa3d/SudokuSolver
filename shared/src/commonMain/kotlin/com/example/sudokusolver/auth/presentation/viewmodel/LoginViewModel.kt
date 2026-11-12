@@ -29,9 +29,8 @@ class LoginViewModel(
             updateState { currentState.copy(isLoading = true, error = null, emailError = false, passwordError = false) }
 
             loginUseCase(LoginData(state.value.email.trim(), state.value.password))
-                .onSuccess { sendEvent(LoginEvent.LoggedIn(currentState.email))}
+                .onSuccess { sendEvent(LoginEvent.LoggedIn(currentState.email)) }
                 .onFailure { e ->
-                    println("error recieved : ${e.message}")
                     updateState {
                         when (e) {
                             is InputError.InvalidEmail -> currentState.copy(emailError = true)
@@ -46,4 +45,5 @@ class LoginViewModel(
 
     fun onCreateAccountClick() = sendEvent(LoginEvent.NavigateToSignUp)
     fun onForgotPasswordClick() = sendEvent(LoginEvent.NavigateToForgotPassword)
+    fun onGuestLoginClick() = sendEvent(LoginEvent.GuestLogin)
 }

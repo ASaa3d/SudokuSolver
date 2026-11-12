@@ -1,20 +1,16 @@
 package com.example.sudokusolver.auth.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,10 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -56,7 +48,6 @@ fun LoginScreen(
             when (event) {
                 is LoginEvent.LoggedIn -> {
                     navBackStack.add(Screen.Home(event.email,false))
-                    navBackStack.removeLastOrNull()
                 }
                 is LoginEvent.NavigateToSignUp -> {
                     navBackStack.add(Screen.SignUp)
@@ -104,6 +95,7 @@ fun LoginScreen(
             onLogIn = viewModel::onLoginClick,
             onPasswordChange = viewModel::onPasswordChange,
             onEmailChange = viewModel::onEmailChange,
+            onGuestLogin = viewModel::onGuestLoginClick
         )
 
     }
@@ -119,6 +111,7 @@ fun LoginScreenContent(
     onCreateNewAccount: () -> Unit,
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
+    onGuestLogin:()->Unit
 ) {
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val windowSizeClass = adaptiveInfo.windowSizeClass
@@ -135,6 +128,7 @@ fun LoginScreenContent(
                 onCreateNewAccount = onCreateNewAccount,
                 onForgetPassword = onForgetPassword,
                 onLogIn = onLogIn,
+                onGuestLogin = onGuestLogin
             )
 
         else -> LoginScreenCompactLayout(
@@ -145,6 +139,7 @@ fun LoginScreenContent(
             onCreateNewAccount = onCreateNewAccount,
             onForgetPassword = onForgetPassword,
             onLogIn = onLogIn,
+            onGuestLogin = onGuestLogin
         )
     }
 }

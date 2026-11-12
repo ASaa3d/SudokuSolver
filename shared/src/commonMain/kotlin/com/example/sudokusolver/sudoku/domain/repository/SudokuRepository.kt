@@ -1,14 +1,14 @@
 package com.example.sudokusolver.sudoku.domain.repository
 
-import com.example.sudokusolver.sudoku.domain.model.ImgBbData
+import androidx.compose.ui.graphics.ImageBitmap
+import com.example.sudokusolver.splash.data.remote.dto.UserDto
 import com.example.sudokusolver.sudoku.domain.model.SudokuGrid
 
 interface SudokuRepository {
-    suspend fun uploadImageToImgBb(
-        imageBytes: ByteArray,
-        apiKey: String,
-        fileName: String = "image.jpg",
-    ): Result<ImgBbData>
+    suspend fun getSudokuGridFromMobile(imageBitmap: ImageBitmap): Result<SudokuGrid>
+    suspend fun getSudokuGridFromWeb(imageByteArray: ByteArray): Result<SudokuGrid>
+    suspend fun getUserMe(): Result<UserDto>
+    suspend fun updateProfilePhoto(imageByteArray: ByteArray): Result<String>
 
-    suspend fun getSudokuGrid(imageUrl: String): Result<SudokuGrid>
+    suspend fun signOut():Result<Unit>
 }

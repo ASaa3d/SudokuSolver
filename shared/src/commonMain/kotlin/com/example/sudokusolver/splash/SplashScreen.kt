@@ -70,7 +70,6 @@ fun SplashScreen(
     viewModel: SplashViewModel = koinViewModel(),
     target:String? = null
 ) {
-    println("splash target=$target vm=${viewModel.hashCode()}")
     val state by viewModel.state.collectAsStateWithLifecycle()
     var animationCycle by remember { mutableStateOf(0) }
     var animationFinished by remember { mutableStateOf(false) }
@@ -113,7 +112,6 @@ fun SplashScreen(
 
 
     LaunchedEffect(Unit) {
-        println("pending event ${pendingEvent.toString()}")
         viewModel.refresh() }
 
     LaunchedEffect(Unit) {

@@ -101,7 +101,11 @@ fun MorphingLoadingIndicator(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
     size: Dp = 48.dp,
-    shapes: List<LoadingShape> = LoadingShape.Default,
+    shapes: List<LoadingShape> = listOf(
+        LoadingShape.Cookie,
+        LoadingShape.Triangle,
+        LoadingShape.Pentagon
+    ),
     morphDurationMillis: Int = 650,
 ) {
     require(shapes.size >= 2) { "Need at least two shapes to morph between" }
@@ -162,7 +166,11 @@ fun ContainedMorphingLoadingIndicator(
     color: Color = MaterialTheme.colorScheme.primary,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     size: Dp = 48.dp,
-    shapes: List<LoadingShape> = LoadingShape.Default,
+    shapes: List<LoadingShape> = listOf(
+        LoadingShape.Cookie,
+        LoadingShape.Triangle,
+        LoadingShape.Pentagon
+    ),
     morphDurationMillis: Int = 650,
 ) {
     Box(

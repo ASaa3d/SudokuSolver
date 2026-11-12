@@ -72,18 +72,20 @@ fun OTPScreenCompactLayout(
                 contentAlignment = Alignment.Center
             )
             {
-                if(state.isLoading)
-                {
+                if (state.isLoading) {
                     ContainedMorphingLoadingIndicator(
                         modifier = Modifier,
                         color = MaterialTheme.colorScheme.primary,
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         size = 48.dp,
-                        shapes = listOf(LoadingShape.Cookie,LoadingShape.Triangle,LoadingShape.Pentagon),
+                        shapes = listOf(
+                            LoadingShape.Cookie,
+                            LoadingShape.Triangle,
+                            LoadingShape.Pentagon
+                        ),
                     )
 
-                }
-                else {
+                } else {
                     OtpInput(
                         value = state.code,
                         onValueChange = onCodeChange,
@@ -93,26 +95,28 @@ fun OTPScreenCompactLayout(
                     )
                 }
             }
-            Spacer(Modifier.height(20.dp))
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight(align = Alignment.CenterVertically)
-            )
-            {
-                Text(
-                    modifier = Modifier.alignByBaseline(),
-                    text = "email not sent? ",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 14.sp
+            if (!state.isLoading) {
+                Spacer(Modifier.height(20.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                        .wrapContentHeight(align = Alignment.CenterVertically)
                 )
-                Spacer(modifier = Modifier.width(10.dp))
-                ResendCodeTimer(
-                    modifier = Modifier.alignByBaseline(),
-                    deadlineMs = deadlineMs,
-                    secondsLeft = secondsLeft,
-                    onResend = onResendVerificationCode
-                )
+                {
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = "email not sent? ",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    ResendCodeTimer(
+                        modifier = Modifier.alignByBaseline(),
+                        deadlineMs = deadlineMs,
+                        secondsLeft = secondsLeft,
+                        onResend = onResendVerificationCode
+                    )
+                }
             }
 
         }

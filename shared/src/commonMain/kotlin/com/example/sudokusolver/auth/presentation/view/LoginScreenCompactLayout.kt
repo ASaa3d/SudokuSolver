@@ -84,6 +84,7 @@ fun LoginScreenCompactLayout(
     onCreateNewAccount: () -> Unit,
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
+    onGuestLogin: ()->Unit
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     Column(
@@ -232,11 +233,6 @@ fun LoginScreenCompactLayout(
                             color = MaterialTheme.colorScheme.onPrimary,
                             size = 32.dp,
                             morphDurationMillis = 500,
-                            shapes = listOf(
-                                LoadingShape.Cookie,
-                                LoadingShape.Triangle,
-                                LoadingShape.Pentagon
-                            ),
                         )
 
                     } else {
@@ -259,8 +255,7 @@ fun LoginScreenCompactLayout(
                         disabledContainerColor = MaterialTheme.colorScheme.inverseSurface,
                         disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface
                     ),
-                    onClick = { //TODO
-                    },
+                    onClick = onGuestLogin,
 
                     )
                 {

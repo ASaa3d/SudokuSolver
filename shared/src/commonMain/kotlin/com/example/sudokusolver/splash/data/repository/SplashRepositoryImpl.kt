@@ -2,6 +2,7 @@ package com.example.sudokusolver.splash.data.repository
 
 import com.example.sudokusolver.datastore.LocalDataSource
 import com.example.sudokusolver.splash.data.remote.SplashRemoteDataSource
+import com.example.sudokusolver.splash.data.remote.dto.UserDto
 import com.example.sudokusolver.splash.domain.repository.SplashRepository
 
 class SplashRepositoryImpl(
@@ -19,8 +20,9 @@ class SplashRepositoryImpl(
             if (!token.isNullOrBlank()) {
                 val userResult = runCatching { remoteDataSource.getUserMe(token) }
                 if (userResult.isSuccess) {
+
                     val user = userResult.getOrNull()
-                    val email = user?.email?.takeIf { it.isNotBlank() } ?: user?.userName ?: ""
+                    val email = user?.email ?: ""
                     return Result.success(email)
                 } else {
                     return Result.failure(userResult.exceptionOrNull() ?: Exception("Failed to fetch user profile"))

@@ -1,6 +1,8 @@
 package com.example.sudokusolver
 
 import android.content.Context
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import com.example.sudokusolver.sudoku.domain.model.PixelFormat
 import com.example.sudokusolver.sudoku.data.local.SudokuRecognizer
 
@@ -21,7 +23,7 @@ class AndroidSudokuRecognizer(context: Context) : SudokuRecognizer {
     ): Array<IntArray>? = native.process(path)
 
     /** Android-only shortcut for when you already have a Bitmap. */
-    fun process(bitmap: android.graphics.Bitmap): Array<IntArray>? = native.process(bitmap)
+    override fun process(bitmap: ImageBitmap): Array<IntArray>? = native.process(bitmap.asAndroidBitmap())
 
     override fun close() = native.close()
 }

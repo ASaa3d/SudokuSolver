@@ -1,5 +1,6 @@
 package com.example.sudokusolver.sudoku.data.local
 
+import androidx.compose.ui.graphics.ImageBitmap
 import com.example.sudokusolver.sudoku.domain.model.PixelFormat
 
 interface SudokuRecognizer : AutoCloseable {
@@ -18,4 +19,6 @@ interface SudokuRecognizer : AutoCloseable {
     fun processFile(
         path: String
     ): Array<IntArray>?
+
+    fun process(bitmap: ImageBitmap): Array<IntArray>?
 }

@@ -30,6 +30,7 @@ buildkonfig {
     packageName = "com.example.sudokusolver"
     defaultConfigs {
         buildConfigField(STRING, "BASE_URL", config("BASE_URL_DEV"))
+        buildConfigField(STRING, "IMG_API_KEY", config("IMG_API_KEY"))
         buildConfigField(BOOLEAN, "DEBUG", "true")
         buildConfigField(STRING, "DL_BASE_URL", config("DL_BASE_URL_DEV"))
     }
@@ -85,6 +86,8 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -104,12 +107,18 @@ kotlin {
             implementation(libs.ktor.serialization)
             implementation(libs.ktor.client.logging)
             implementation(libs.compose.material3.adaptive)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)
+            implementation(libs.ktor.client.js)
+        }
+        wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
         }
         getByName("androidDeviceTest").dependencies {

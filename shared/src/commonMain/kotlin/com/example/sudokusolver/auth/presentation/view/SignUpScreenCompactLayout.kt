@@ -289,11 +289,6 @@ fun SignUpScreenCompactLayout(
                         color = MaterialTheme.colorScheme.onPrimary,
                         size = 32.dp,
                         morphDurationMillis = 500,
-                        shapes = listOf(
-                            LoadingShape.Cookie,
-                            LoadingShape.Triangle,
-                            LoadingShape.Pentagon
-                        ),
                     )
 
                 } else {

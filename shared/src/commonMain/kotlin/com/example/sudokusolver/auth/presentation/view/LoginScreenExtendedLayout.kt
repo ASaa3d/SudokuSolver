@@ -27,7 +27,6 @@ import com.example.sudokusolver.auth.presentation.state.LoginState
 import org.jetbrains.compose.resources.painterResource
 import sudokusolver.shared.generated.resources.Res
 import sudokusolver.shared.generated.resources.wallpaper
-import sudokusolver.shared.generated.resources.wallpaper2
 
 @Composable
 fun LoginScreenExtendedLayout(
@@ -38,6 +37,7 @@ fun LoginScreenExtendedLayout(
     onCreateNewAccount: () -> Unit,
     onForgetPassword: () -> Unit,
     onLogIn: () -> Unit,
+    onGuestLogin:()->Unit
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -66,6 +66,7 @@ fun LoginScreenExtendedLayout(
                         onCreateNewAccount = onCreateNewAccount,
                         onForgetPassword = onForgetPassword,
                         onLogIn = onLogIn,
+                        onGuestLogin=onGuestLogin
                     )
                 }
             }

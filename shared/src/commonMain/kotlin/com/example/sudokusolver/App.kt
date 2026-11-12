@@ -20,6 +20,7 @@ import com.example.sudokusolver.di.PlatformBackSync
 import com.example.sudokusolver.navigation.Screen
 import com.example.sudokusolver.navigation.navConfig
 import com.example.sudokusolver.splash.SplashScreen
+import com.example.sudokusolver.sudoku.presenetation.SudokuScreen
 
 import theme.AppTheme
 
@@ -110,7 +111,12 @@ fun App(
                         isVerifyAccount = isVerifyAcc
                     )
                 }
-                entry<Screen.Home> {(email,isGuest)->
+                entry<Screen.Home> { (email, isGuest) ->
+                    SudokuScreen(
+                        navBackStack = backStack,
+                        email=email,
+                        isGuest = isGuest
+                    )
                 }
             }
         )
