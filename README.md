@@ -121,8 +121,8 @@ On Android, `AndroidSudokuRecognizer` passes the model files and image input to 
 
 In the browser, the app sends the image through the backend-based recognition path instead of invoking the Android native library.
 
-- **ONNX models / native library repository:** [Add model repository link](#)
-- **Backend repository:** [Add Spring Boot backend repository link](#)
+- **ONNX models / native C++ library repository:** [ASaa3d/SudokuSolver_LIB](https://github.com/ASaa3d/SudokuSolver_LIB)
+- **Backend repository:** [ASaa3d/SudokuSolver_Backend](https://github.com/ASaa3d/SudokuSolver_Backend)
 
 ## Backend and service notes
 
