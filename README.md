@@ -12,9 +12,13 @@ The app lets you capture or upload a Sudoku puzzle, recognize its grid, enter an
 
 ## Demo
 
-<!-- TODO: Replace this placeholder with a link or embed after uploading the demo video. -->
 
-**Demo video:** [Add demo video here](#)
+**Demo video:**
+
+
+https://github.com/user-attachments/assets/519a3d06-b935-4465-bbbc-02f3e6a681ec
+
+
 
 ## Screenshots
 
