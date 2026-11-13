@@ -1,0 +1,13 @@
+
+
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.sudokusolver",
+    "sha256_cert_fingerprints": [
+      "72:C3:B9:E3:8B:66:1D:DF:59:99:08:40:29:C5:64:F0:16:71:86:1C:B0:A5:2F:C6:06:0B:D8:92:19:82:08:C6",
+      "F1:67:67:DD:16:B2:DA:1F:5A:EB:8D:5B:F2:A1:0B:33:30:CE:19:4C:33:B2:6E:57:B0:18:62:8B:C8:E4:FD:E5"
+    ]
+  }
+}]
