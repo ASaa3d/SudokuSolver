@@ -17,7 +17,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.local_photo_description
 import sudokusolver.shared.generated.resources.wallpaper
 
 private val imagesGrid: List<DrawableResource> = listOf(
@@ -53,7 +55,10 @@ fun ImageHorizontalGrid(
             ) {
                 Image(
                     painter = painterResource(drawableRes),
-                    contentDescription = "Local Photo ${pageIndex + 1}",
+                    contentDescription = stringResource(
+                        Res.string.local_photo_description,
+                        pageIndex + 1,
+                    ),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
                 )

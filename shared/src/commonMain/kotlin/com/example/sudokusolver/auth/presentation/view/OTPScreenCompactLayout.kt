@@ -25,8 +25,11 @@ import com.example.sudokusolver.auth.presentation.state.ResetPasswordCodeState
 import com.example.sudokusolver.components.ContainedMorphingLoadingIndicator
 import com.example.sudokusolver.components.LoadingShape
 import com.example.sudokusolver.components.LogoComp
-import com.example.sudokusolver.components.OtpInput
-import com.example.sudokusolver.components.ResendCodeTimer
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.email_not_sent
+import sudokusolver.shared.generated.resources.otp
+import sudokusolver.shared.generated.resources.otp_sent_to_email
 
 @Composable
 fun OTPScreenCompactLayout(
@@ -54,7 +57,7 @@ fun OTPScreenCompactLayout(
                 .padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             Text(
-                text = "OTP",
+                text = stringResource(Res.string.otp),
                 fontSize = 30.sp,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
@@ -62,7 +65,7 @@ fun OTPScreenCompactLayout(
             )
             Text(
                 modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically),
-                text = "We sent a 6-digit OTP (one-time password) to $email, please enter it below ",
+                text = stringResource(Res.string.otp_sent_to_email, email),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
@@ -105,7 +108,7 @@ fun OTPScreenCompactLayout(
                 {
                     Text(
                         modifier = Modifier.alignByBaseline(),
-                        text = "email not sent? ",
+                        text = stringResource(Res.string.email_not_sent),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp
                     )

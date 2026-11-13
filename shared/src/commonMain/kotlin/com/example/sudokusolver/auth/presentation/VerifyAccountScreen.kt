@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.stringResource
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.example.sudokusolver.auth.presentation.event.VerifyAccountEvent
@@ -39,6 +40,13 @@ import com.example.sudokusolver.auth.presentation.viewmodel.VerifyAccountViewMod
 import com.example.sudokusolver.navigation.Screen
 import org.koin.compose.viewmodel.koinViewModel
 import theme.SlateBlue
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.account_verified_message
+import sudokusolver.shared.generated.resources.back_to_login
+import sudokusolver.shared.generated.resources.short_moment
+import sudokusolver.shared.generated.resources.try_again
+import sudokusolver.shared.generated.resources.verification_failed
+import sudokusolver.shared.generated.resources.verifying_account
 
 @Composable
 fun VerifyAccountScreen(
@@ -49,6 +57,7 @@ fun VerifyAccountScreen(
     viewModel: VerifyAccountViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val accountVerifiedMessage = stringResource(Res.string.account_verified_message)
 
     LaunchedEffect(email, code) {
         viewModel.verify(email = email, code = code)
@@ -59,7 +68,9 @@ fun VerifyAccountScreen(
             when (event) {
                 is VerifyAccountEvent.Success -> {
                     navBackStack.clear()
-                    navBackStack.add(Screen.Login)
+                    navBackStack.add(
+                        Screen.AuthMessage(accountVerifiedMessage)
+                    )
                 }
             }
         }
@@ -115,7 +126,7 @@ private fun VerifyAccountContent(
                         }
                     }
                     Text(
-                        text = "Verification failed",
+                        text = stringResource(Res.string.verification_failed),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center,
@@ -129,21 +140,21 @@ private fun VerifyAccountContent(
                     Button(
                         onClick = onRetry,
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Try again") }
+                    ) { Text(stringResource(Res.string.try_again)) }
                     OutlinedButton(
                         onClick = onBackToLogin,
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Back to login") }
+                    ) { Text(stringResource(Res.string.back_to_login)) }
                 } else {
                     CircularProgressIndicator(modifier = Modifier.size(56.dp))
                     Text(
-                        text = "Verifying your account",
+                        text = stringResource(Res.string.verifying_account),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center,
                     )
                     Text(
-                        text = "This will only take a moment.",
+                        text = stringResource(Res.string.short_moment),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,

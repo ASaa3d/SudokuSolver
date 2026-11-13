@@ -1,4 +1,4 @@
-package com.example.sudokusolver.components
+package com.example.sudokusolver.auth.presentation.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.resend_code
+import sudokusolver.shared.generated.resources.resend_code_in
 import kotlin.time.Clock
 
 @Composable
@@ -21,11 +25,11 @@ fun ResendCodeTimer(
 
     Text(
         text = if (enabled) {
-            "Resend code"
+            stringResource(Res.string.resend_code)
         } else {
             val mm = (secondsLeft / 60).toString().padStart(2, '0')
             val ss = (secondsLeft % 60).toString().padStart(2, '0')
-            "Resend code in $mm:$ss"
+            stringResource(Res.string.resend_code_in, "$mm:$ss")
         },
         modifier = modifier.clickable(
             enabled = enabled,

@@ -13,6 +13,7 @@ sealed interface Screen : NavKey {
     @Serializable data object Login : Screen
     @Serializable data object SignUp : Screen
 
+    @Serializable data class AuthMessage(val text: String) : Screen
     @Serializable data class VerifyAccount(val email: String, val code: String) : Screen
     @Serializable data object ResetAccountEmail : Screen
     @Serializable data class ResetAccountCode(val email: String, val isVerifyAccount: Boolean) : Screen
@@ -29,6 +30,7 @@ val navConfig = SavedStateConfiguration {
             subclass(Screen.Splash::class, Screen.Splash.serializer())
             subclass(Screen.Login::class, Screen.Login.serializer())
             subclass(Screen.SignUp::class, Screen.SignUp.serializer())
+            subclass(Screen.AuthMessage::class, Screen.AuthMessage.serializer())
             subclass(Screen.VerifyAccount::class, Screen.VerifyAccount.serializer())
             subclass(Screen.ResetAccountEmail::class, Screen.ResetAccountEmail.serializer())
             subclass(Screen.ResetAccountCode::class, Screen.ResetAccountCode.serializer())
@@ -44,11 +46,11 @@ fun Screen.toUrlPath(): String = when (this) {
     is Screen.Splash -> "/"
     is Screen.Login -> "/login"
     is Screen.SignUp -> "/signup"
+    is Screen.AuthMessage -> "/auth-message"
     is Screen.VerifyAccount -> "/verify-account"
     is Screen.ResetAccountEmail -> "/reset-email"
     is Screen.ResetPassword -> "/reset-password"
     is Screen.ResetAccountCode -> "/reset-code"
     is Screen.Home -> "/home"
 }
-
 

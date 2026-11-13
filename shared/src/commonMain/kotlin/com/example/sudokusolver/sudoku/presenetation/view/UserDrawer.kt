@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -55,6 +54,17 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.example.sudokusolver.showSplash
 import com.example.sudokusolver.splash.data.remote.dto.UserDto
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.choose_from_gallery
+import sudokusolver.shared.generated.resources.guest
+import sudokusolver.shared.generated.resources.loading
+import sudokusolver.shared.generated.resources.open_profile_menu
+import sudokusolver.shared.generated.resources.profile_photo
+import sudokusolver.shared.generated.resources.sign_in_to_add_profile_photo
+import sudokusolver.shared.generated.resources.sign_out
+import sudokusolver.shared.generated.resources.take_a_photo
+import sudokusolver.shared.generated.resources.upload_photo
 
 // ───────────────────────────── Avatar (reusable) ─────────────────────────────
 
@@ -72,6 +82,7 @@ fun UserAvatar(
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.colorScheme
+    val profilePhotoDescription = stringResource(Res.string.profile_photo)
     Box(
         modifier = modifier
             .size(size)
@@ -85,7 +96,7 @@ fun UserAvatar(
         } else {
             SubcomposeAsyncImage(
                 model = imageUrl,
-                contentDescription = "Profile photo",
+                contentDescription = profilePhotoDescription,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 loading = { AvatarFallback(name, isGuest, size) },
@@ -137,13 +148,14 @@ fun DrawerAvatarButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val openProfileMenuDescription = stringResource(Res.string.open_profile_menu)
     UserAvatar(
         imageUrl = user?.imgUrl,
         name = user?.userName.orEmpty(),
         isGuest = isGuest,
         size = 40.dp,
         modifier = modifier
-            .semantics { contentDescription = "Open profile menu" }
+            .semantics { contentDescription = openProfileMenuDescription }
             .clip(CircleShape)
             .clickable(role = Role.Button, onClick = onClick)
     )
@@ -179,7 +191,7 @@ fun UserDrawerContent(
 
             if (isGuest) {
                 Text(
-                    text = "Sign in to add a profile photo",
+                    text = stringResource(Res.string.sign_in_to_add_profile_photo),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -191,14 +203,14 @@ fun UserDrawerContent(
                         onClick = { menuOpen = true },
                         enabled = editEnabled && user != null,
                         shape = RoundedCornerShape(50)
-                    ) { Text("Upload photo") }
+                    ) { Text(stringResource(Res.string.upload_photo)) }
 
                     DropdownMenu(
                         expanded = menuOpen,
                         onDismissRequest = { menuOpen = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Choose from gallery") },
+                            text = { Text(stringResource(Res.string.choose_from_gallery)) },
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.PhotoLibrary,
@@ -212,7 +224,7 @@ fun UserDrawerContent(
                         )
                         if (showSplash) {
                             DropdownMenuItem(
-                                text = { Text("Take a photo") },
+                                text = { Text(stringResource(Res.string.take_a_photo)) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Camera,
@@ -231,8 +243,8 @@ fun UserDrawerContent(
 
             Text(
                 text = when {
-                    isGuest -> "Guest"
-                    user == null -> "Loading…"
+                    isGuest -> stringResource(Res.string.guest)
+                    user == null -> stringResource(Res.string.loading)
                     else -> user.userName
                 },
                 style = MaterialTheme.typography.titleLarge,
@@ -270,7 +282,7 @@ fun UserDrawerContent(
                             contentDescription = null
                         )
                         Text(
-                            "Sign out",
+                            stringResource(Res.string.sign_out),
                             fontWeight = FontWeight.W700,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

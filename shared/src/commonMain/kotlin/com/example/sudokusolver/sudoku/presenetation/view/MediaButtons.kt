@@ -15,6 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sudokusolver.showSplash
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.camera
+import sudokusolver.shared.generated.resources.take_photo
+import sudokusolver.shared.generated.resources.upload
+import sudokusolver.shared.generated.resources.upload_image
 
 
 @Composable
@@ -29,8 +35,12 @@ fun MediaButtons(
     val height = if (compact) 40.dp else 52.dp
     val shape = RoundedCornerShape(50)
     val padding = PaddingValues(horizontal = 18.dp)
-    val uploadLabel = if (compact) "Upload" else "Upload image"
-    val cameraLabel = if (compact) "Camera" else "Take photo"
+    val uploadLabel = stringResource(
+        if (compact) Res.string.upload else Res.string.upload_image
+    )
+    val cameraLabel = stringResource(
+        if (compact) Res.string.camera else Res.string.take_photo
+    )
 
     val upload: @Composable (Modifier) -> Unit = { m ->
         if (compact) {

@@ -4,12 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 
@@ -20,8 +20,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -40,16 +40,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.sudokusolver.auth.presentation.state.ResetPasswordState
-import com.example.sudokusolver.components.LoadingShape
 import com.example.sudokusolver.components.LogoComp
 import com.example.sudokusolver.components.MorphingLoadingIndicator
 import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
 
-import sudokusolver.shared.generated.resources.hide_password
-
 import sudokusolver.shared.generated.resources.password
+import sudokusolver.shared.generated.resources.hide_password
 import sudokusolver.shared.generated.resources.show_password
+import sudokusolver.shared.generated.resources.confirm_password
+import sudokusolver.shared.generated.resources.new_password_instruction
+import sudokusolver.shared.generated.resources.password_requirement
+import sudokusolver.shared.generated.resources.reset_password_title
+import sudokusolver.shared.generated.resources.verify_email
 
 
 @Composable
@@ -77,7 +80,7 @@ fun ResetPasswordCompactLayout(
                 .padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             Text(
-                text = "Reset Password",
+                text = stringResource(Res.string.reset_password_title),
                 fontSize = 30.sp,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
@@ -85,7 +88,7 @@ fun ResetPasswordCompactLayout(
             )
             Text(
                 modifier = Modifier,
-                text = "Enter your new password",
+                text = stringResource(Res.string.new_password_instruction),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
@@ -120,7 +123,7 @@ fun ResetPasswordCompactLayout(
                 isError = state.passwordError,
                 supportingText = {
                     if (state.passwordError) Text(
-                        "Password should have 1 uppercase letter,1 lowecase letter, 1 symbol(@#$%^&*) and 1 digit and have a min of 8 characters length",
+                        stringResource(Res.string.password_requirement),
                         color = MaterialTheme.colorScheme.error,
                         maxLines = 3
                     )
@@ -128,7 +131,7 @@ fun ResetPasswordCompactLayout(
             )
 
             Text(
-                text = "Confirm Password",
+                text = stringResource(Res.string.confirm_password),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
                 style = MaterialTheme.typography.titleSmall
@@ -169,7 +172,7 @@ fun ResetPasswordCompactLayout(
 
                 } else {
                     Text(
-                        text = "Verify Email",
+                        text = stringResource(Res.string.verify_email),
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily

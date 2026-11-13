@@ -3,7 +3,6 @@ package com.example.sudokusolver.auth.presentation.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -13,27 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.grid.LazyGridPrefetchStrategy
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -58,24 +47,22 @@ import com.example.sudokusolver.auth.presentation.state.SignUpState
 import com.example.sudokusolver.components.LoadingShape
 import com.example.sudokusolver.components.LogoComp
 import com.example.sudokusolver.components.MorphingLoadingIndicator
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
-import sudokusolver.shared.generated.resources.continue_with_google
-import sudokusolver.shared.generated.resources.create_now
-import sudokusolver.shared.generated.resources.dont_have_an_account
+import sudokusolver.shared.generated.resources.confirm_password
 import sudokusolver.shared.generated.resources.email
 import sudokusolver.shared.generated.resources.email_placeholder
-import sudokusolver.shared.generated.resources.forget_password
-import sudokusolver.shared.generated.resources.google_icon_description
-import sudokusolver.shared.generated.resources.google_noir
 import sudokusolver.shared.generated.resources.hide_password
+import sudokusolver.shared.generated.resources.invalid_email
 import sudokusolver.shared.generated.resources.log_in
-import sudokusolver.shared.generated.resources.or_text
+import sudokusolver.shared.generated.resources.name
+import sudokusolver.shared.generated.resources.name_placeholder
+import sudokusolver.shared.generated.resources.old_friend
 import sudokusolver.shared.generated.resources.password
-import sudokusolver.shared.generated.resources.remember_me
+import sudokusolver.shared.generated.resources.password_requirement
 import sudokusolver.shared.generated.resources.show_password
-import sudokusolver.shared.generated.resources.sign_in
+import sudokusolver.shared.generated.resources.sign_up
+import sudokusolver.shared.generated.resources.username_requirement
 
 @Composable
 fun SignUpScreenCompactLayout(
@@ -104,7 +91,7 @@ fun SignUpScreenCompactLayout(
             modifier = Modifier.fillMaxWidth().fillMaxHeight(0.8f).padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             Text(
-                text = "Sign up",
+                text = stringResource(Res.string.sign_up),
                 fontSize = 30.sp,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
@@ -117,7 +104,7 @@ fun SignUpScreenCompactLayout(
             {
                 Text(
                     modifier = Modifier.alignByBaseline(),
-                    text = "Old friend?",
+                    text = stringResource(Res.string.old_friend),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp
                 )
@@ -146,7 +133,7 @@ fun SignUpScreenCompactLayout(
                 )
                 {
                     Text(
-                        text = "Name",
+                        text = stringResource(Res.string.name),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.titleSmall
@@ -156,7 +143,7 @@ fun SignUpScreenCompactLayout(
                         value = state.username,
                         onValueChange = onUsernameChange,
                         modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                        placeholder = { Text("Vito Corleone") },
+                        placeholder = { Text(stringResource(Res.string.name_placeholder)) },
                         textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                         shape = RoundedCornerShape(8.dp),
                         singleLine = true,
@@ -164,7 +151,7 @@ fun SignUpScreenCompactLayout(
                         isError = state.usernameError,
                         supportingText = {
                             if (state.usernameError) Text(
-                                "User name should be 6-20 characters long",
+                                stringResource(Res.string.username_requirement),
                                 color = MaterialTheme.colorScheme.error,
                                 maxLines = 3
                             )
@@ -196,7 +183,7 @@ fun SignUpScreenCompactLayout(
                         isError = state.emailError,
                         supportingText = {
                             if (state.emailError) Text(
-                                "Invalid Email",
+                                stringResource(Res.string.invalid_email),
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
@@ -237,7 +224,7 @@ fun SignUpScreenCompactLayout(
                         isError = state.passwordError,
                         supportingText = {
                             if (state.passwordError) Text(
-                                "Password should have 1 uppercase letter,1 lowecase letter, 1 symbol(@#$%^&*) and 1 digit and have a min of 8 characters length",
+                                stringResource(Res.string.password_requirement),
                                 color = MaterialTheme.colorScheme.error,
                                 maxLines = 3
                             )
@@ -251,7 +238,7 @@ fun SignUpScreenCompactLayout(
                 )
                 {
                     Text(
-                        text = "Confirm Password",
+                        text = stringResource(Res.string.confirm_password),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.titleSmall
@@ -293,7 +280,7 @@ fun SignUpScreenCompactLayout(
 
                 } else {
                     Text(
-                        text = "Sign up",
+                        text = stringResource(Res.string.sign_up),
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = MaterialTheme.typography.labelLarge.fontFamily

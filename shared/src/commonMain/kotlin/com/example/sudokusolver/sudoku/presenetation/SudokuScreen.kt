@@ -56,6 +56,9 @@ import com.example.sudokusolver.sudoku.presenetation.view.EmptyState
 import com.example.sudokusolver.sudoku.presenetation.view.MediaButtons
 import com.example.sudokusolver.sudoku.presenetation.view.SudokuBoard
 import com.example.sudokusolver.sudoku.presenetation.viewmodel.SudokuViewModel
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.sudoku_solver
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
@@ -245,7 +248,7 @@ private fun SudokuScreenContent(
                         ) {
                             DrawerAvatarButton(state.userInfo, isGuest, onOpenDrawer)
                             Text(
-                                "Sudoku Solver",
+                                stringResource(Res.string.sudoku_solver),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -285,7 +288,7 @@ private fun SudokuScreenContent(
                 ) {
                     DrawerAvatarButton(state.userInfo, isGuest, onOpenDrawer)
                     Text(
-                        "Sudoku Solver",
+                        stringResource(Res.string.sudoku_solver),
                         modifier = Modifier.weight(1f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -326,8 +329,5 @@ private fun SudokuScreenContent(
         }
     }
 }
-
-
-
 
 

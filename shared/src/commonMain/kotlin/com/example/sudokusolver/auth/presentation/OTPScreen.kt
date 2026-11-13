@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.stringResource
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.window.core.layout.WindowSizeClass
@@ -32,12 +33,14 @@ import com.example.sudokusolver.auth.presentation.view.OTPScreenCompactLayout
 import com.example.sudokusolver.auth.presentation.view.OTPScreenExtendedLayout
 import com.example.sudokusolver.auth.presentation.viewmodel.ResetPasswordCodeViewModel
 import com.example.sudokusolver.components.CircularSnackBar
-import com.example.sudokusolver.components.nowMs
-import com.example.sudokusolver.components.secondsUntil
+import com.example.sudokusolver.auth.presentation.view.nowMs
+import com.example.sudokusolver.auth.presentation.view.secondsUntil
 import com.example.sudokusolver.navigation.Screen
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 import org.koin.compose.viewmodel.koinViewModel
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.account_verified_message
 
 @Composable
 fun OTPScreen(
@@ -49,6 +52,7 @@ fun OTPScreen(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val accountVerifiedMessage = stringResource(Res.string.account_verified_message)
 
     val totalSeconds = 120
     var deadlineMs by rememberSaveable {
@@ -70,8 +74,10 @@ fun OTPScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is ResetPasswordCodeEvent.AccountVerified -> {
-                    navBackStack.removeLast()
-                    navBackStack.add(Screen.Login)
+                    navBackStack.clear()
+                    navBackStack.add(
+                        Screen.AuthMessage(accountVerifiedMessage)
+                    )
                 }
                 is ResetPasswordCodeEvent.ResetPasswordCodeValidated -> {
                     navBackStack.removeLast()

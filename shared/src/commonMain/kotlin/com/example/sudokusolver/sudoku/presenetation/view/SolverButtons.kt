@@ -14,6 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.erase
+import sudokusolver.shared.generated.resources.hint
+import sudokusolver.shared.generated.resources.solve
+import sudokusolver.shared.generated.resources.undo
 
 
 @Composable
@@ -31,12 +37,12 @@ fun SolverButtons(
     if (twoByTwo) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SolverActionButton("Undo", undoEnabled, onUndo, Modifier.weight(1f))
-                SolverActionButton("Erase", eraseEnabled, onErase, Modifier.weight(1f))
+                SolverActionButton(stringResource(Res.string.undo), undoEnabled, onUndo, Modifier.weight(1f))
+                SolverActionButton(stringResource(Res.string.erase), eraseEnabled, onErase, Modifier.weight(1f))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SolverActionButton("Hint", hintEnabled, onHint, Modifier.weight(1f))
-                SolverActionButton("Solve", solveEnabled, onSolve, Modifier.weight(1f), primary = true)
+                SolverActionButton(stringResource(Res.string.hint), hintEnabled, onHint, Modifier.weight(1f))
+                SolverActionButton(stringResource(Res.string.solve), solveEnabled, onSolve, Modifier.weight(1f), primary = true)
             }
         }
     } else {
@@ -44,10 +50,10 @@ fun SolverButtons(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            SolverActionButton("Undo", undoEnabled, onUndo, Modifier.weight(1f))
-            SolverActionButton("Erase", eraseEnabled, onErase, Modifier.weight(1f))
-            SolverActionButton("Hint", hintEnabled, onHint, Modifier.weight(1f))
-            SolverActionButton("Solve", solveEnabled, onSolve, Modifier.weight(1f), primary = true)
+            SolverActionButton(stringResource(Res.string.undo), undoEnabled, onUndo, Modifier.weight(1f))
+            SolverActionButton(stringResource(Res.string.erase), eraseEnabled, onErase, Modifier.weight(1f))
+            SolverActionButton(stringResource(Res.string.hint), hintEnabled, onHint, Modifier.weight(1f))
+            SolverActionButton(stringResource(Res.string.solve), solveEnabled, onSolve, Modifier.weight(1f), primary = true)
         }
     }
 }

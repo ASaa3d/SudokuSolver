@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.deeplink.DeepLinkRequest
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.example.sudokusolver.auth.presentation.AuthMessageScreen
 import com.example.sudokusolver.auth.presentation.LoginScreen
 import com.example.sudokusolver.auth.presentation.OTPScreen
 import com.example.sudokusolver.auth.presentation.ResetPasswordEmailScreen
@@ -83,6 +84,12 @@ fun App(
                 entry<Screen.SignUp> {
                     SignUpScreen(
                         navBackStack = backStack,
+                    )
+                }
+                entry<Screen.AuthMessage> { (text) ->
+                    AuthMessageScreen(
+                        navBackStack = backStack,
+                        text = text,
                     )
                 }
                 entry<Screen.VerifyAccount> { (email, code) ->

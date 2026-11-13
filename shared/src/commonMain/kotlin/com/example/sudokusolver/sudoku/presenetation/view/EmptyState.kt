@@ -20,6 +20,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.sudokusolver.components.ContainedMorphingLoadingIndicator
 import com.example.sudokusolver.components.LogoComp
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.puzzle_empty_state
+import sudokusolver.shared.generated.resources.reading_puzzle
+import sudokusolver.shared.generated.resources.sudoku_solver_logo_description
 
 
 // ───────────────────────────── Empty / welcome state ─────────────────────────────
@@ -37,10 +42,11 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        LogoComp(modifier = Modifier.size(120.dp).semantics { contentDescription = "Sudoku Solver Logo" })
+        val logoDescription = stringResource(Res.string.sudoku_solver_logo_description)
+        LogoComp(modifier = Modifier.size(120.dp).semantics { contentDescription = logoDescription })
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Snap or upload a puzzle and let it do the thinking.",
+            text = stringResource(Res.string.puzzle_empty_state),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -49,7 +55,10 @@ fun EmptyState(
         if (isLoading) {
             ContainedMorphingLoadingIndicator()
             Spacer(Modifier.height(16.dp))
-            Text("Reading your puzzle…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(Res.string.reading_puzzle),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         } else {
             MediaButtons(
                 enabled = true,

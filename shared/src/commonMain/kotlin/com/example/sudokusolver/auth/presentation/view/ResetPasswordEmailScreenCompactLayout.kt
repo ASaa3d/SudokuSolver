@@ -53,28 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sudokusolver.auth.presentation.state.LoginState
 import com.example.sudokusolver.auth.presentation.state.ResetPasswordEmailState
-import com.example.sudokusolver.components.LoadingShape
 import com.example.sudokusolver.components.LogoComp
 import com.example.sudokusolver.components.MorphingLoadingIndicator
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import sudokusolver.shared.generated.resources.Res
-import sudokusolver.shared.generated.resources.continue_with_google
-import sudokusolver.shared.generated.resources.create_now
-import sudokusolver.shared.generated.resources.dont_have_an_account
 import sudokusolver.shared.generated.resources.email
 import sudokusolver.shared.generated.resources.email_placeholder
-import sudokusolver.shared.generated.resources.forget_password
-import sudokusolver.shared.generated.resources.google_icon_description
-import sudokusolver.shared.generated.resources.google_noir
-import sudokusolver.shared.generated.resources.hide_password
-import sudokusolver.shared.generated.resources.log_in
-import sudokusolver.shared.generated.resources.or_text
-import sudokusolver.shared.generated.resources.password
-import sudokusolver.shared.generated.resources.remember_me
-import sudokusolver.shared.generated.resources.show_password
-import sudokusolver.shared.generated.resources.sign_in
-import kotlin.coroutines.Continuation
+import sudokusolver.shared.generated.resources.forgot_password_title
+import sudokusolver.shared.generated.resources.invalid_email
+import sudokusolver.shared.generated.resources.verify_email
+import sudokusolver.shared.generated.resources.verify_email_instruction
 
 @Composable
 fun ResetPPasswordEmailScreenCompactLayout(
@@ -99,7 +87,7 @@ fun ResetPPasswordEmailScreenCompactLayout(
                 .padding(vertical = 20.dp, horizontal = 40.dp)
         ) {
             Text(
-                text = "Forgot Password",
+                text = stringResource(Res.string.forgot_password_title),
                 fontSize = 30.sp,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold,
@@ -107,7 +95,7 @@ fun ResetPPasswordEmailScreenCompactLayout(
             )
             Text(
                 modifier = Modifier,
-                text = "Enter your email so we can verify it",
+                text = stringResource(Res.string.verify_email_instruction),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
@@ -131,7 +119,7 @@ fun ResetPPasswordEmailScreenCompactLayout(
                 isError = state.emailError,
                 supportingText = {
                     if (state.emailError) Text(
-                        "Invalid Email",
+                        stringResource(Res.string.invalid_email),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -166,7 +154,7 @@ fun ResetPPasswordEmailScreenCompactLayout(
 
                     } else {
                         Text(
-                            text = "Verify Email",
+                            text = stringResource(Res.string.verify_email),
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = MaterialTheme.typography.labelLarge.fontFamily

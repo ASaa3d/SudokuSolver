@@ -32,6 +32,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.sudokusolver.components.ContainedMorphingLoadingIndicator
 import com.example.sudokusolver.sudoku.presenetation.state.SudokuState
+import org.jetbrains.compose.resources.stringResource
+import sudokusolver.shared.generated.resources.Res
+import sudokusolver.shared.generated.resources.row_column_empty
+import sudokusolver.shared.generated.resources.row_column_value
 import kotlin.collections.orEmpty
 import kotlin.collections.toSet
 
@@ -100,6 +104,11 @@ fun SudokuBoard(
                                 isGiven -> colors.onSurface
                                 else -> colors.primary
                             }
+                            val cellDescription = if (value == 0) {
+                                stringResource(Res.string.row_column_empty, row + 1, col + 1)
+                            } else {
+                                stringResource(Res.string.row_column_value, row + 1, col + 1, value)
+                            }
 
                             Box(
                                 modifier = Modifier
@@ -109,7 +118,7 @@ fun SudokuBoard(
                                     .clickable(enabled = !state.isLoading) { onSelectCell(row, col) }
                                     .semantics {
                                         contentDescription =
-                                            "Row ${row + 1}, column ${col + 1}, ${if (value == 0) "empty" else value}"
+                                            cellDescription
                                     },
                                 contentAlignment = Alignment.Center
                             ) {
