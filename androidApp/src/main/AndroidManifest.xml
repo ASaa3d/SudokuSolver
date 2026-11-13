@@ -12,17 +12,28 @@
         android:theme="@style/Theme.App">
         <activity
             android:exported="true"
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="sudoku-solver-5jf.pages.dev" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <data android:scheme="https" />
+                <data android:host="sudoku-solver-5jf.pages.dev" />
+                <data android:path="/login" />
+                <data android:path="/signup" />
+                <data android:path="/verify-account" />
+                <data android:path="/reset-email" />
+                <data android:path="/reset-password" />
+                <data android:path="/reset-code" />
+                <data android:path="/home" />
+                <data android:path="/verify" />
+                <data android:path="/reset" />
             </intent-filter>
         </activity>
     </application>
