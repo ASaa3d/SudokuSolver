@@ -22,4 +22,5 @@ node_modules/
 */build/
 /shared/src/androidMain/assets/
 /shared/src/androidMain/jniLibs/
-./.wrangler/*
+/.wrangler/*
+
