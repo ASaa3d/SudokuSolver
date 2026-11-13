@@ -1,4 +1,4 @@
-# Sudoku Solver
+# <img src="media/logo.png" alt="" width="48" align="center"> Sudoku Solver
 
 A cross-platform Sudoku application built to demonstrate end-to-end app and web development: shared Kotlin code, native Android integration, a browser app, authentication, backend communication, and on-device machine-learning inference.
 
