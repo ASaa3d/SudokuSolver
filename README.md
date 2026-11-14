@@ -1,5 +1,6 @@
-# <img src="media/logo.png" alt="" width="48" align="center"> Sudoku Solver
 
+# <img src="media/logo.png" alt="" width="48" align="center"> Sudoku Solver
+<img width="1024" height="572" alt="cover" src="https://github.com/user-attachments/assets/d6ab6831-efd8-4bd0-9f9b-c56a78496424" />
 A cross-platform Sudoku application built to demonstrate end-to-end app and web development: shared Kotlin code, native Android integration, a browser app, authentication, backend communication, and on-device machine-learning inference.
 
 The app lets you capture or upload a Sudoku puzzle, recognize its grid, enter and edit digits, ask for hints, and solve the puzzle. The interface adapts across phone and larger screens.
