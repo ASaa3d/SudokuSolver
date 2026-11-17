@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" />
-                <data android:host="sudokusolver-backend-kfr7.vercel.app" />
+                <data android:host="sudoku-solver-5jf.pages.dev" />
                 <data android:path="/login" />
                 <data android:path="/signup" />
                 <data android:path="/verify-account" />
